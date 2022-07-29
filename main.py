@@ -9,15 +9,15 @@ from torch.utils.data import DataLoader
 
 from model.lstm import Model
 from train_eval import train
-from data_load import get_dataloader
+from data_load import get_dataloader, see_data
 
 
 class Config(object):
 
     def __init__(self):
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # 设备
-        # self.device = torch.device('cpu')  # 设备
-        self.filepath = './data/DOGE-USD.csv'
+        # self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # 设备
+        self.device = torch.device('cpu')  # 设备
+        self.filepath = './data/climate.csv'
         self.save_path = './dict/lstm.pkl'
 
         self.seed = 0
@@ -36,12 +36,15 @@ def seed_init(seed):
     np.random.seed(seed)
     torch.backends.cudnn.deterministic = True
 
+    # torch.backends.cudnn.enabled = True
+    # torch.backends.cudnn.benchmark = True
+
 
 if __name__ == '__main__':
     config = Config()
-    model = Model().to(config.device)
-
     seed_init(config.seed)
+
+    model = Model().to(config.device)
     TrainL, ValidL, test_before, transform = get_dataloader(config)
     test_after = train(config, model, TrainL, ValidL)
 
@@ -49,12 +52,15 @@ if __name__ == '__main__':
     # print(after[:-20])
 
     # after = transform.inverse_transform(after)
-    print(test_before)
-    print(test_after)
+
+    test_before = np.asarray(test_before).reshape(len(test_before), 1)
+    test_before = transform.inverse_transform(test_before)
+    test_after = transform.inverse_transform(test_after)
+
     plt.figure()
-    plt.title('Model')
-    plt.xlabel('Date', fontsize=18)
-    plt.ylabel('Open Price USD ($)', fontsize=18)
+    plt.title('LSTM Model')
+    plt.xlabel('Time', fontsize=18)
+    plt.ylabel('Temperate', fontsize=18)
     plt.plot(test_before)
     plt.plot(test_after)
 

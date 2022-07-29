@@ -9,7 +9,7 @@ class Model(nn.Module):
         super(Model, self).__init__()
 
         self.lstm = nn.LSTM(1, 32, batch_first=True,
-                            bidirectional=False)
+                            bidirectional=False, num_layers=2)
         self.linear = nn.Sequential(
             nn.Linear(32, 8),
             nn.Dropout(0.5),
@@ -21,7 +21,7 @@ class Model(nn.Module):
         # 初始输入格式为(batch_size , length)
         # print(x.shape)
 
-        x = x.view(x.shape[0], 60, -1)
+        x = x.view(x.shape[0], 24, -1)
         # print(x.shape)
         out, (h, c) = self.lstm(x)
         out = out[:, -1, :]
