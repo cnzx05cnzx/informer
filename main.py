@@ -15,10 +15,10 @@ from data_load import get_dataloader, see_data
 class Config(object):
 
     def __init__(self):
-        # self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # 设备
-        self.device = torch.device('cpu')  # 设备
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # 设备
+        # self.device = torch.device('cpu')  # 设备
         self.filepath = './data/climate.csv'
-        self.save_path = './dict/lstm.pkl'
+        self.save_path = './save_dict/lstm.pkl'
 
         self.seed = 0
         self.dropout = 0.3  # 随机失活
