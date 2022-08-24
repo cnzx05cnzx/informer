@@ -7,10 +7,10 @@ import time
 
 def train(config, model, train_iter, vaild_iter):
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.learning_rate)
+    criteria = torch.nn.MSELoss()
     # 学习率指数衰减，每次epoch：学习率 = gamma * 学习率
 
     best_loss = 1000
-    best_num = []
     cnt = 0  # 记录多久没有模型效果提升
     stop_flag = False  # 早停标签
 
@@ -28,7 +28,7 @@ def train(config, model, train_iter, vaild_iter):
             # print(outputs)
             # print(pos)
             model.zero_grad()
-            loss = F.mse_loss(outputs[0], pos)
+            loss = criteria(outputs, pos)
 
             loss.backward()
             optimizer.step()
@@ -45,16 +45,14 @@ def train(config, model, train_iter, vaild_iter):
         model.eval()
         t_a = time.time()
         total_loss = 0
-        temp_num = []
         for i, (data, pos) in enumerate(vaild_iter):
             with torch.no_grad():
                 outputs = model(data.to(config.device))
                 pos = pos.to(config.device)
                 # print(outputs)
                 # print(pos)
-                loss = F.mse_loss(outputs[0], pos)
-                # print(outputs.cpu.numpy())
-                temp_num.append(outputs[0].cpu().numpy().tolist())
+                loss = F.mse_loss(outputs, pos)
+                # print(outputs.cpu().numpy().tolist())
 
             total_loss += float(loss.item())
 
@@ -67,49 +65,47 @@ def train(config, model, train_iter, vaild_iter):
         if total_loss < best_loss:
             best_loss = total_loss
             torch.save(model.state_dict(), config.save_path)
-            best_num = temp_num
             print('效果提升,保存最优参数')
             cnt = 0
         else:
             cnt += 1
             if cnt > config.early_stop:
-                print('模型已无提升停止训练,验证集loss:%.2f' % best_loss)
+                print('模型已无提升停止训练,验证集loss:%f' % best_loss)
                 stop_flag = True
                 break
-        # model.load_state_dict(torch.load(config.save_path))
+        # models.load_state_dict(torch.load(config.save_path))
         # config.learning_rate = config.learning_rate * 0.9
-        # optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
+        # optimizer = torch.optim.Adam(models.parameters(), lr=config.learning_rate)
 
     if stop_flag:
         pass
     else:
-        print('训练结束,验证集loss:%.2f' % best_loss)
-    return best_num
+        print('训练结束,验证集loss:%f' % best_loss)
 
 
 def test(config, model, test_iter):
     # 测试-------------------------------
+    criteria = torch.nn.MSELoss()
     model.load_state_dict(torch.load(config.save_path))
     model.eval()
     t_a = time.time()
-    total_acc, total_loss = 0, 0
+    total_loss = 0
+    temp_num = []
     for i, (data, pos) in enumerate(test_iter):
         with torch.no_grad():
             outputs = model(data.to(config.device))
             pos = pos.to(config.device)
-            loss = F.cross_entropy(outputs, pos)
+            loss = criteria(outputs, pos)
+            temp_num.extend(outputs.cpu().numpy().tolist())
 
-        true = pos.data.cpu()
-        predict = torch.max(outputs.data, 1)[1].cpu()
         total_loss += float(loss.item())
-        total_acc += torch.eq(predict, true).sum().float().item()
 
-    total_acc = total_acc / len(test_iter.dataset)
     total_loss = total_loss / len(test_iter)
 
     t_b = time.time()
-    msg = 'Test Loss: {0:>5.2},  Test Acc: {1:>6.2%},  Time: {2:>7.2}'
-    print(msg.format(total_loss, total_acc, t_b - t_a))
+    msg = 'Test Loss: {0:>5.2},  Time: {1:>7.2}'
+    print(msg.format(total_loss, t_b - t_a))
+    return temp_num
 
 
 #  投票选举或平均选举
