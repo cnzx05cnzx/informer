@@ -15,9 +15,12 @@
 # 项目结构
 
 首先根据Bitcoin的项目目录进行分析。
-分成19个部分。
+分成19个部分，每一个部分有各自的作用。
 
- 1. 这里是列表文本
+ 1.  **bench**， 共识-法官判断
+ 2. **compact**， 兼容
+ 3. **config**， 配置
+ 4. **bench**， gong'shi
 
 ## 切换到另一个文件
 
@@ -153,6 +156,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjAxNDg2Mjc2MCw3Mjc2NjE5NjYsMTQxNz
+eyJoaXN0b3J5IjpbMTExNjg2NzY2NCw3Mjc2NjE5NjYsMTQxNz
 YzNTA5OSwtNzM1Mzg5NTcxXX0=
 -->
