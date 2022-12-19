@@ -131,45 +131,7 @@ public:
  3. 如果规则1有效并且设置了此变量，那么相对锁定时间单位为512秒，否则锁定时间就为1个区块
  4. 如果nSequence用于相对时间锁，即规则1有效，那么这个变量就用来从nSequence计算对应的锁定时间
 
-```c++ 
-class CTxIn
-{
-public:
-    COutPoint prevout;      //上一笔交易输出位置
-    CScript scriptSig;      //解锁脚本
-    uint32_t nSequence;     //序列号，可用于交易的锁定 
-                            
-    CScriptWitness scriptWitness; 
-    /* 
-    规则1:如果一笔交易中所有的SEQUENCE_FINAL都被赋值了相应的nSequence，那么nLockTime就会被禁用
-     */
-    static const uint32_t SEQUENCE_FINAL = 0xffffffff;
-
-    /* 
-    规则2:如果设置了该值，nSequence不被用于相对时间锁定。规则1失效
-     */
-    static const uint32_t SEQUENCE_LOCKTIME_DISABLE_FLAG = (1 << 31);
-
-    /* 
-    规则3：如果规则1有效并且设置了此变量，那么相对锁定时间单位为512秒，否则锁定时间就为1个区块
-     */
-    static const uint32_t SEQUENCE_LOCKTIME_TYPE_FLAG = (1 << 22);
-
-    /* 
-    规则4：如果nSequence用于相对时间锁，即规则1有效，那么这个变量就用来从nSequence计算对应的锁定时间
-     */
-    static const uint32_t SEQUENCE_LOCKTIME_MASK = 0x0000ffff;
-
-    /*
-     相对时间锁粒度
-     为了使用相同的位数来粗略地编码相同的挂钟时间，
-     因为区块的产生限制于每600s产生一个，
-     相对时间锁定的最小单位为512是，512 = 2^9
-     所以相对时间锁定的时间转化为相当于当前值左移9位
-     */
-    static const int SEQUENCE_LOCKTIME_GRANULARITY = 9;
-};
-```
+其中，相对时间锁粒度为了使用相同的位数来粗略地编码相同的挂钟时间。因为区块的产生限制于每600s产生一个，相对时间锁定的最小单位为512是，512 = 2^9，所以相对时间锁定的时间转化为相当于当前值左移9位
 
 ###  CTxOut
  负责交易的输出，该类中定义了输出金额和锁定脚本
@@ -361,7 +323,7 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTg2NTMzNDA0NiwtMjkyNDI2NjA5LDE1OT
+eyJoaXN0b3J5IjpbMTIyNjU1MzE4NSwtMjkyNDI2NjA5LDE1OT
 g0NzczMTksLTEyODQzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIw
 NDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1Mz
 EsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTcz
