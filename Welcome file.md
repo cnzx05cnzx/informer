@@ -2,9 +2,15 @@
 
 该文章对Bitcoin 0.21 版本进行粗略的开源代码分析，格式参见第五届开源代码创新大赛代码注解赛道。
 
-# 文件
+# 主要程序
 
-StackEdit中文版 将您的文件存储在您的浏览器中，这意味着您的所有文件都会自动保存在本地并且可以**离线访问！**
+ 1.   **Bitcoin Core.app** Bitcoin客户端图形界面版
+    
+2.  **bitcoind** /src/bitcoind Bitcoin简洁命令行版,也是下一步源代码分析的重点(不能与Bitcoin Core同事运行，如果不小心尝试同时运行另外一个客户端，它会提示已经有一个客户端在运行并且自动退出)
+    
+3. **bitcoin-cli** /src/bitcoin-cli Bitcoind的一个功能完备的RPC客户端，可以通过它在命令行查询某个区块信息，交易信息等
+    
+4.  **bitcoin-tx** /src/bitcoind 比特币交易处理模块，可以进行交易的查询和创建
 
 ## 创建文件和文件夹
 
@@ -144,5 +150,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX0=
+eyJoaXN0b3J5IjpbLTgyMDQyMjQ3NCwxNDE3NjM1MDk5LC03Mz
+UzODk1NzFdfQ==
 -->
