@@ -190,9 +190,10 @@ public:
     std::string ToString() const;
 };
 ```
-###  CTxIn
+###  CTxIn(部分)
  负责交易的输入，包括当前输入所对应上一笔交易的输出位置，
  并且还包括上一笔输出所需要的签名脚本
+该模块
 
 ```c++ 
 class CTxIn
@@ -200,50 +201,26 @@ class CTxIn
 public:
     COutPoint prevout;      //上一笔交易输出位置
     CScript scriptSig;      //解锁脚本
-    uint32_t nSequence;     /**序列号，可用于交易的锁定 
-                            nSequence字段的设计初心是想让交易能在在内存中修改，可惜后面从未运用过
-                            对于具有nLocktime或CHECKLOCKTIMEVERIFY的交易，
-                            nSequence值必须设置为小于2^32，以使时间锁定器有效。通常设置为2^32-1
-                            由于BIP-68的激活，新的共识规则适用于任何包含nSequence值小于2^31的输入的交易（bit 1<<31 is not set）。
-                            以编程方式，这意味着如果没有设置最高有效（bit 1<<31），它是一个表示“相对锁定时间”的标志。
-                            否则（bit 1<<31set），nSequence值被保留用于其他用途，
-                            例如启用CHECKLOCKTIMEVERIFY，nLocktime，Opt-In-Replace-By-Fee以及其他未来的新产品。
-                            一笔输入交易，当输入脚本中的nSequence值小于2^31时，就是相对时间锁定的输入交易。
-                            这种交易只有到了相对锁定时间后才生效。例如，
-                            具有30个区块的nSequence相对时间锁的一个输入的交易
-                            只有在从输入中引用的UTXO开始的时间起至少有30个块时才有效。
-                            由于nSequence是每个输入字段，因此交易可能包含任何数量的时间锁定输入，
-                            所有这些都必须具有足够的时间以使交易有效。
-                            */
-    CScriptWitness scriptWitness; //! Only serialized through CTransaction
-
-    /* Setting nSequence to this value for every input in a transaction
-     * disables nLockTime. 
-     *
-     * 规则1:如果一笔交易中所有的SEQUENCE_FINAL都被赋值了相应的nSequence，那么nLockTime就会被禁用
+    uint32_t nSequence;     //序列号，可用于交易的锁定 
+                            
+    CScriptWitness scriptWitness; 
+    /* 
+    规则1:如果一笔交易中所有的SEQUENCE_FINAL都被赋值了相应的nSequence，那么nLockTime就会被禁用
      */
     static const uint32_t SEQUENCE_FINAL = 0xffffffff;
 
-    /* Below flags apply in the context of BIP 68*/
-    /* If this flag set, CTxIn::nSequence is NOT interpreted as a
-     * relative lock-time. 
-     *
-     * 规则2:如果设置了该值，nSequence不被用于相对时间锁定。规则1失效
+    /* 
+    规则2:如果设置了该值，nSequence不被用于相对时间锁定。规则1失效
      */
     static const uint32_t SEQUENCE_LOCKTIME_DISABLE_FLAG = (1 << 31);
 
-    /* If CTxIn::nSequence encodes a relative lock-time and this flag
-     * is set, the relative lock-time has units of 512 seconds,
-     * otherwise it specifies blocks with a granularity of 1. 
-     *
-     * 规则3：如果规则1有效并且设置了此变量，那么相对锁定时间单位为512秒，否则锁定时间就为1个区块
+    /* 
+    规则3：如果规则1有效并且设置了此变量，那么相对锁定时间单位为512秒，否则锁定时间就为1个区块
      */
     static const uint32_t SEQUENCE_LOCKTIME_TYPE_FLAG = (1 << 22);
 
-    /* If CTxIn::nSequence encodes a relative lock-time, this mask is
-     * applied to extract that lock-time from the sequence field. 
-     *
-     * 规则4：如果nSequence用于相对时间锁，即规则1有效，那么这个变量就用来从nSequence计算对应的锁定时间
+    /* 
+    规则4：如果nSequence用于相对时间锁，即规则1有效，那么这个变量就用来从nSequence计算对应的锁定时间
      */
     static const uint32_t SEQUENCE_LOCKTIME_MASK = 0x0000ffff;
 
@@ -296,7 +273,7 @@ public:
 };
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwMDEzMTE2NDgsOTYyMTE1MjE4LC0xOT
-A0MzI2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1
-MDk5LC03MzUzODk1NzFdfQ==
+eyJoaXN0b3J5IjpbLTQ5OTA2MTcwMSw5NjIxMTUyMTgsLTE5MD
+QzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUw
+OTksLTczNTM4OTU3MV19
 -->
