@@ -247,9 +247,13 @@ public:
 ```
 
 ###  CTxOut
- 负责交易的输出
+ 负责交易的输出，该类中定义了输出金额和锁定脚本
+###  CTransaction
+ 负责交易的输出，该类中定义了输出金额和锁定脚本
+
+ 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzg0ODcyODQsOTYyMTE1MjE4LC0xOTA0Mz
-I2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1MDk5
-LC03MzUzODk1NzFdfQ==
+eyJoaXN0b3J5IjpbLTEyMzMwMTI2NTgsOTYyMTE1MjE4LC0xOT
+A0MzI2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1
+MDk5LC03MzUzODk1NzFdfQ==
 -->
