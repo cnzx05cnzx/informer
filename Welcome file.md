@@ -360,6 +360,8 @@ public:
  CTxMemPoolEntry 负责存储相应的交易，以及该交易对应的所有子孙交易
  
  当一个新的CTxMemPoolEntry被添加到交易池，会更新新添加交易的所有子孙交易的状态(包括子孙交易数量，大小，和交易费用）和祖父交易状态
+
+并且，如果移除一个交易时，它对应所有的子孙交易也将同样被移除
 ```c++ 
 class CTxMemPool;
 //交易池基本构成元素
@@ -374,21 +376,13 @@ private:
     unsigned int entryHeight;   //区块高度 
     bool spendsCoinbase;        //上个交易是否是创币交易   
     int64_t sigOpCost;          //？？？  !< Total sigop cost
-    int64_t feeDelta;           //交易优先级的一个标量    //!< Used for determining the priority of the transaction for mining in a block
-    LockPoints lockPoints;      //锁定点，交易最后的区块高度和打包时间 //!< Track the height and time at which tx was final
+    int64_t feeDelta;           //交易优先级的一个标量  
+    LockPoints lockPoints;      //锁定点，交易最后的区块高度和打包时间
+    
+    uint64_t nCountWithDescendants;     //子孙交易数量 
+    uint64_t nSizeWithDescendants;      //大小      
+    CAmount nModFeesWithDescendants;    //费用总和，包括当前交易  
 
-    // Information about descendants of this transaction that are in the
-    // mempool; if we remove this transaction we must remove all of these
-    // descendants as well.
-    /* 
-    **  子孙交易信息
-    *   如果我们移除一个交易，我们也必须同时移除它所有的子孙交易
-    */
-    uint64_t nCountWithDescendants;     //子孙交易数量 //!< number of descendant transactions
-    uint64_t nSizeWithDescendants;      //大小        //!< ... and size
-    CAmount nModFeesWithDescendants;    //费用总和，包括当前交易   //!< ... and total fees (all including us)
-
-    // Analogous statistics for ancestor transactions
     //祖先交易信息
     uint64_t nCountWithAncestors;       //祖先交易数量
     uint64_t nSizeWithAncestors;        //大小
@@ -446,7 +440,7 @@ public:
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ4Mjg0OTUyNCwtOTE3MTc1NTg4LDk2Mj
-ExNTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5
-NjYsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX0=
+eyJoaXN0b3J5IjpbLTEyNTIwNDE2OTEsLTkxNzE3NTU4OCw5Nj
+IxMTUyMTgsLTE5MDQzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYx
+OTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV19
 -->
