@@ -38,9 +38,9 @@
  19. **zmp**，通信信息 
 
 接口可以分成三个部分：
- 1. **Wall**，一致性 
- 2. **wallet**， 钱包类
- 3. **zmp**，通信信息 
+ 1. **WalletInitInterface.h**，钱包的抽象类接口 
+ 2. **validationinterface.h cpp**， 区块校验接口
+ 3. **ui_interface.h cpp**，图形界面的接口
 
 ## 切换到另一个文件
 
@@ -176,6 +176,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQ5MTg0NDgzNCw3Mjc2NjE5NjYsMTQxNz
+eyJoaXN0b3J5IjpbMjA0MzI4NzE0NCw3Mjc2NjE5NjYsMTQxNz
 YzNTA5OSwtNzM1Mzg5NTcxXX0=
 -->
