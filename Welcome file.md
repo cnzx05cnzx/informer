@@ -6,11 +6,11 @@
 
  1.   **Bitcoin Core.app** Bitcoin客户端图形界面
     
-2.  **Bitcoind** /src/bitcoind Bitcoin简洁命令行版,也是下一步源代码分析的重点(不能与Bitcoin Core同事运行，如果不小心尝试同时运行另外一个客户端，它会提示已经有一个客户端在运行并且自动退出)
+2.  **Bitcoind** /src/bitcoind Bitcoin命令行版,也是下一步源代码分析的重点(不能与Bitcoin Core同时运行）
     
-3. **Bitcoin-cli** /src/bitcoin-cli Bitcoind的一个功能完备的RPC客户端，可以通过它在命令行查询某个区块信息，交易信息等
+3. **Bitcoin-cli** /src/bitcoin-cli Bitcoind的一个功能完备的RPC客户端，可以使用命令行查询某个区块信息，交易信息等等
     
-4.  **Bitcoin-tx** /src/bitcoind 比特币交易处理模块，可以进行交易的查询和创建
+4.  **Bitcoin-tx** /src/bitcoind Bitcoind的交易处理模块，可以进行交易的查询和创建
 
 ## 创建文件和文件夹
 
@@ -150,6 +150,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI5NzMyNzI4NCwxNDE3NjM1MDk5LC03Mz
-UzODk1NzFdfQ==
+eyJoaXN0b3J5IjpbNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNT
+M4OTU3MV19
 -->
