@@ -436,12 +436,16 @@ public:
     mutable size_t vTxHashesIdx;    //交易池哈希的下标  //!< Index in mempool's vTxHashes
 };
 ```
- CTxMemPoolEntry还有不同的排序方法，应对不同的需求
+ CTxMemPoolEntry还有不同的排序方法，应对不同的需求：
+
+ 1. CompareTxMemPoolEntryByDescendantScore，按score/size原则对CTxMemPoolEntry排序
+ 2. CompareTxMemPoolEntryByScore，按(fee+delta)/size原则对CTxMemPoolEntry排序
+ 3. CompareTxMemPoolEntryByEntryTime，按时间CTxMemPoolEntry对排序
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTU4MDkzODA0MywtMTI1MjA0MTY5MSwtOT
-E3MTc1NTg4LDk2MjExNTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2
-NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX
-0=
+eyJoaXN0b3J5IjpbLTEyODY3NTc3NTksLTEyNTIwNDE2OTEsLT
+kxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1MzEsLTE5NjY1
+NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV
+19
 -->
