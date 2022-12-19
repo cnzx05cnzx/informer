@@ -20,7 +20,10 @@
  1.  **bench**， 共识-法官判断
  2. **compact**， 兼容
  3. **config**， 配置
- 4. **bench**， gong'shi
+ 4. **consensus**， 共识算法
+ 5. **crypto**， 加密算法
+ 6. **interfaces**， j事件，节点，钱包类
+ 7. **leveldb**，水平数据库
 
 ## 切换到另一个文件
 
@@ -156,6 +159,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTExNjg2NzY2NCw3Mjc2NjE5NjYsMTQxNz
+eyJoaXN0b3J5IjpbMTYxNzk3MDkxOCw3Mjc2NjE5NjYsMTQxNz
 YzNTA5OSwtNzM1Mzg5NTcxXX0=
 -->
