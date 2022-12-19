@@ -436,6 +436,14 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
  *  没有满足最低交易费的交易
  *  "双花"交易
  *  一个非标准交易
+
+该类存在sanity-check，check函数将保证pool的一致性。所有的输入都在mapNextTx数组里；sanity-check关闭，check函数无效。
+
+更新交易时从上之下，先更新祖父节点信息。
+
+ 从mempool中移除一个交易集合：如果一个交易在这个集合中，那么它的所有子孙交易都必须在集合中，除非该交易已经被打包到区块中；如果要移除一个已经被打包到区块中的交易，
+     那么要把updateDescendants设为true，
+     从而更新mempool中所有子孙节点的祖先信息
 ```c++ 
 class CTxMemPool
 {
@@ -487,12 +495,7 @@ public:
     std::map<uint256, CAmount> mapDeltas;
     explicit CTxMemPool(CBlockPolicyEstimator* estimator = nullptr);
 
-    /*
-    如果开启了sanity-check，check函数将保证pool的一致性
-    所有的输入都在mapNextTx数组里；sanity-check关闭，check函数无效
-    */
-    void check(const CCoinsViewCache *pcoins) const;
-    void setSanityCheck(double dFrequency = 1.0) { nCheckFrequency = static_cast<uint32_t>(dFrequency * 4294967295.0); }
+  
 
     /*
     addUnchecked函数必先更新祖先交易的状态
@@ -589,7 +592,7 @@ private:
 };
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTY3MDEyODcwNCwtMTI4NDMzNjgyNywtMT
+eyJoaXN0b3J5IjpbLTQyODQ4MDcxMywtMTI4NDMzNjgyNywtMT
 Q0NTU4MjE3NCwtMTI1MjA0MTY5MSwtOTE3MTc1NTg4LDk2MjEx
 NTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5Nj
 YsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX0=
