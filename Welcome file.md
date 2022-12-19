@@ -151,28 +151,18 @@ public:
     
     static const int32_t CURRENT_VERSION=2;         //默认交易版本
     static const int32_t MAX_STANDARD_VERSION=2;    
-    /*
-    下面这些变量都被定义为常量类型，从而避免无意识的修改了交易而没有更新缓存的hash值；
-    然而CTransaction不是可变的
-    反序列化和分配被执行的时候会绕过常量
-    这才是安全的，因为更新整个结构包括哈希值
-    */
+
     const std::vector<CTxIn> vin;       //交易输入
     const std::vector<CTxOut> vout;     //交易输出
     const int32_t nVersion;             //版本         
     const uint32_t nLockTime;           //锁定时间
 
 private:
-    /** Memory only. */
     const uint256 hash;
-
     uint256 ComputeHash() const;
 
 public:
-    /** Construct a CTransaction that qualifies as IsNull() */
     CTransaction();
-
-
     /**可变交易转换为交易*/
     CTransaction(const CMutableTransaction &tx);
     CTransaction(CMutableTransaction &&tx);
@@ -297,9 +287,9 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwMjQ5MTY3OTIsLTI5MjQyNjYwOSwxNT
-k4NDc3MzE5LC0xMjg0MzM2ODI3LC0xNDQ1NTgyMTc0LC0xMjUy
-MDQxNjkxLC05MTcxNzU1ODgsOTYyMTE1MjE4LC0xOTA0MzI2NT
-MxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1MDk5LC03
-MzUzODk1NzFdfQ==
+eyJoaXN0b3J5IjpbMTEwNTgwMDU4NywtMjkyNDI2NjA5LDE1OT
+g0NzczMTksLTEyODQzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIw
+NDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1Mz
+EsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTcz
+NTM4OTU3MV19
 -->
