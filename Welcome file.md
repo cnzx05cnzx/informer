@@ -492,63 +492,22 @@ public:
         >
     > indexed_transaction_set;
 
-    mutable CCriticalSection cs;
-    indexed_transaction_set mapTx;
-
-    typedef indexed_transaction_set::nth_index<0>::type::iterator txiter;
-    std::vector<std::pair<uint256, txiter> > vTxHashes; //见证数据的哈希  
-
-    struct CompareIteratorByHash {
-        bool operator()(const txiter &a, const txiter &b) const {
-            return a->GetTx().GetHash() < b->GetTx().GetHash();
-        }
-    };
-    typedef std::set<txiter, CompareIteratorByHash> setEntries;
-
-    const setEntries & GetMemPoolParents(txiter entry) const;
-    const setEntries & GetMemPoolChildren(txiter entry) const;
-private:
-    typedef std::map<txiter, setEntries, CompareIteratorByHash> cacheMap;
-
-    struct TxLinks {
-        setEntries parents;
-        setEntries children;
-    };
-
-    typedef std::map<txiter, TxLinks, CompareIteratorByHash> txlinksMap;
-    txlinksMap mapLinks;
-
-    void UpdateParent(txiter entry, txiter parent, bool add);
-    void UpdateChild(txiter entry, txiter child, bool add);
-
-    std::vector<indexed_transaction_set::const_iterator> GetSortedDepthAndScore() const;
-
 public:
     indirectmap<COutPoint, const CTransaction*> mapNextTx;
     std::map<uint256, CAmount> mapDeltas;
-
-    /** Create a new CTxMemPool.
-    *   创建一个新的交易池
-     */
     explicit CTxMemPool(CBlockPolicyEstimator* estimator = nullptr);
 
-    /**
-     * If sanity-checking is turned on, check makes sure the pool is
-     * consistent (does not contain two transactions that spend the same inputs,
-     * all inputs are in the mapNextTx array). If sanity-checking is turned off,
-     * check does nothing.
-     *
-     **如果开启了sanity-check，check函数将保证pool的一致性(不包含两个在同一个输入中的交易)
-     * 所有的输入都在mapNextTx数组里；sanity-check关闭，check函数无效
-     *
-     */
+    /*
+    如果开启了sanity-check，check函数将保证pool的一致性
+    所有的输入都在mapNextTx数组里；sanity-check关闭，check函数无效
+    */
     void check(const CCoinsViewCache *pcoins) const;
     void setSanityCheck(double dFrequency = 1.0) { nCheckFrequency = static_cast<uint32_t>(dFrequency * 4294967295.0); }
 
     /*
     addUnchecked函数必先更新祖先交易的状态
     第一个addUnchecked函数可以用来调用CalculateMemPoolAncestors
-    *  然后再调用第二个addUnchecked
+    然后再调用第二个addUnchecked
     */
     bool addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry, bool validFeeEstimate = true);
     bool addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry, setEntries &setAncestors, bool validFeeEstimate = true);
@@ -646,8 +605,8 @@ private:
 };
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTMxNzk2MjM0MiwtMTQ0NTU4MjE3NCwtMT
-I1MjA0MTY5MSwtOTE3MTc1NTg4LDk2MjExNTIxOCwtMTkwNDMy
-NjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OS
-wtNzM1Mzg5NTcxXX0=
+eyJoaXN0b3J5IjpbLTEyODQzMzY4MjcsLTE0NDU1ODIxNzQsLT
+EyNTIwNDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQz
+MjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOT
+ksLTczNTM4OTU3MV19
 -->
