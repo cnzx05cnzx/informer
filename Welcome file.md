@@ -110,20 +110,9 @@ public:
 ```
 ### CBlock
 继承自CBlockHeader，拥有其所有成员，作为所有交易的容器，
-同时包含 fChecked 变量作为交易yan'zh
+同时包含 fChecked 变量作为交易验证符号
 
-```c++ 
 
-class CBlock : public CBlockHeader         //继承自CBlockHeader，拥有其所有成员变量
-{
-public:
-    // network and disk
-    std::vector<CTransactionRef> vtx;      //所有交易的容器
-
-    // memory only
-    mutable bool fChecked;                 //交易是否验证
-};
-```
 
 ### CBlockLocator
 用于描述区块链中在其他节点的一个位置， 如果其他节点没有相同的分支，它可以找到一个最近的中继(最近的相同块)。 更进一步地讲，它可能是分叉前的一个位置
@@ -377,7 +366,7 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzY1ODAwNDczLDE1OTg0NzczMTksLTEyOD
+eyJoaXN0b3J5IjpbLTg3Mjg0Mzc2LDE1OTg0NzczMTksLTEyOD
 QzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIwNDE2OTEsLTkxNzE3
 NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1MzEsLTE5NjY1NjcwNj
 csNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV19
