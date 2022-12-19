@@ -436,10 +436,11 @@ public:
     mutable size_t vTxHashesIdx;    //交易池哈希的下标  //!< Index in mempool's vTxHashes
 };
 ```
+ CTxMemPoolEntry还有不同的排序方法，应对不同的需求
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTYzNjA5NjY4MCwtMTI1MjA0MTY5MSwtOT
+eyJoaXN0b3J5IjpbMTU4MDkzODA0MywtMTI1MjA0MTY5MSwtOT
 E3MTc1NTg4LDk2MjExNTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2
 NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX
 0=
