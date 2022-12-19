@@ -193,7 +193,8 @@ public:
 ###  CTxIn(部分)
  负责交易的输入，包括当前输入所对应上一笔交易的输出位置，
  并且还包括上一笔输出所需要的签名脚本
-该模块
+
+该模块为了实现所需的功能，定义了四个规则（已在代码中注释）
 
 ```c++ 
 class CTxIn
@@ -224,19 +225,12 @@ public:
      */
     static const uint32_t SEQUENCE_LOCKTIME_MASK = 0x0000ffff;
 
-    /* In order to use the same number of bits to encode roughly the
-     * same wall-clock duration, and because blocks are naturally
-     * limited to occur every 600s on average, the minimum granularity
-     * for time-based relative lock-time is fixed at 512 seconds.
-     * Converting from CTxIn::nSequence to seconds is performed by
-     * multiplying by 512 = 2^9, or equivalently shifting up by
-     * 9 bits. 
-     *
-     * 相对时间锁粒度
-     * 为了使用相同的位数来粗略地编码相同的挂钟时间，
-     * 因为区块的产生限制于每600s产生一个，
-     * 相对时间锁定的最小单位为512是，512 = 2^9
-     * 所以相对时间锁定的时间转化为相当于当前值左移9位
+    /*
+     相对时间锁粒度
+     为了使用相同的位数来粗略地编码相同的挂钟时间，
+     因为区块的产生限制于每600s产生一个，
+     相对时间锁定的最小单位为512是，512 = 2^9
+     所以相对时间锁定的时间转化为相当于当前值左移9位
      */
     static const int SEQUENCE_LOCKTIME_GRANULARITY = 9;
 
@@ -249,31 +243,10 @@ public:
     CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=SEQUENCE_FINAL);
 
     ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(prevout);
-        READWRITE(scriptSig);
-        READWRITE(nSequence);
-    }
-
-    friend bool operator==(const CTxIn& a, const CTxIn& b)
-    {
-        return (a.prevout   == b.prevout &&
-                a.scriptSig == b.scriptSig &&
-                a.nSequence == b.nSequence);
-    }
-
-    friend bool operator!=(const CTxIn& a, const CTxIn& b)
-    {
-        return !(a == b);
-    }
-
-    std::string ToString() const;
 };
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ5OTA2MTcwMSw5NjIxMTUyMTgsLTE5MD
-QzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUw
-OTksLTczNTM4OTU3MV19
+eyJoaXN0b3J5IjpbLTEwODgxMjc2MDAsOTYyMTE1MjE4LC0xOT
+A0MzI2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1
+MDk5LC03MzUzODk1NzFdfQ==
 -->
