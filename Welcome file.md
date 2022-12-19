@@ -246,13 +246,10 @@ public:
 };
 ```
 
-###  CTxIn(部分)
- 负责交易的输入，包括当前输入所对应上一笔交易的输出位置，
- 并且还包括上一笔输出所需要的签名脚本
-
-该模块为了实现所需的功能，定义了四个规则（已在代码中注释）
+###  CTxOut
+ 负责交易的输出
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4NzI0NzI4NDQsOTYyMTE1MjE4LC0xOT
-A0MzI2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1
-MDk5LC03MzUzODk1NzFdfQ==
+eyJoaXN0b3J5IjpbNzg0ODcyODQsOTYyMTE1MjE4LC0xOTA0Mz
+I2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1MDk5
+LC03MzUzODk1NzFdfQ==
 -->
