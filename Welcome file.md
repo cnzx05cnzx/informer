@@ -141,9 +141,12 @@ public:
 用于描述区块链中在其他节点的一个位置， 如果其他节点没有相同的分支，它可以找到一个最近的中继(最近的相同块)。 更进一步地讲，它可能是分叉前的一个位置
 
 
+## Transaction
+交易是比特币中的重要内容。源码在 bitcoin/src/private 中。
 
+### ### COutPut
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTYyMTE1MjE4LC0xOTA0MzI2NTMxLC0xOT
-Y2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1MDk5LC03MzUzODk1
-NzFdfQ==
+eyJoaXN0b3J5IjpbMTk3NTAzNjQxMCw5NjIxMTUyMTgsLTE5MD
+QzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUw
+OTksLTczNTM4OTU3MV19
 -->
