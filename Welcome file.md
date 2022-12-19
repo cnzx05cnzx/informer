@@ -252,10 +252,109 @@ public:
 该模块实现基本的交易，就是那些在网络中广播并被最终打包到区块中的数据结构。
  其中，一个交易可以包含多个交易输入和输出
  
+```c++ 
+class CTransaction
+{
+public:
+    // Default transaction version.
+    static const int32_t CURRENT_VERSION=2;         //默认交易版本
 
+    // Changing the default transaction version requires a two step process: first
+    // adapting relay policy by bumping MAX_STANDARD_VERSION, and then later date
+    // bumping the default CURRENT_VERSION at which point both CURRENT_VERSION and
+    // MAX_STANDARD_VERSION will be equal.
+    /** 更改默认交易版本需要两个步骤：
+    *   1.首先通过碰撞MAX_STANDARD_VERSION来调整中继策略，
+    *   2.然后在稍后的日期碰撞默认的CURRENT_VERSION
+    *   
+    *   最终MAX_STANDARD_VERSION和CURRENT_VERSION会一致
+    */
+    static const int32_t MAX_STANDARD_VERSION=2;    
+
+    /** 下面这些变量都被定义为常量类型，从而避免无意识的修改了交易而没有更新缓存的hash值；
+    *   然而CTransaction不是可变的
+    *   反序列化和分配被执行的时候会绕过常量
+    *   这才是安全的，因为更新整个结构包括哈希值
+    */
+    const std::vector<CTxIn> vin;       //交易输入
+    const std::vector<CTxOut> vout;     //交易输出
+    const int32_t nVersion;             //版本         
+    const uint32_t nLockTime;           //锁定时间
+
+private:
+    /** Memory only. */
+    const uint256 hash;
+
+    uint256 ComputeHash() const;
+
+public:
+    /** Construct a CTransaction that qualifies as IsNull() */
+    CTransaction();
+
+
+    /**可变交易转换为交易*/
+    CTransaction(const CMutableTransaction &tx);
+    CTransaction(CMutableTransaction &&tx);
+
+    template <typename Stream>
+    inline void Serialize(Stream& s) const {
+        SerializeTransaction(*this, s);
+    }
+
+    /*
+    提供此反序列化构造函数而不是Unserialize方法。
+    反序列化是不可能的，因为它需要覆盖const字段
+    */
+    template <typename Stream>
+    CTransaction(deserialize_type, Stream& s) : CTransaction(CMutableTransaction(deserialize, s)) {}
+
+    bool IsNull() const {
+        return vin.empty() && vout.empty();
+    }
+
+    const uint256& GetHash() const {
+        return hash;
+    }
+    uint256 GetWitnessHash() const;         //计算包含交易和witness数据的散列           
+
+    // Return sum of txouts.
+    CAmount GetValueOut() const;            //返回交易出书金额总和      
+    // GetValueIn() is a method on CCoinsViewCache, because
+    // inputs must be known to compute value in.
+
+    unsigned int GetTotalSize() const;      // 返回交易大小
+
+    bool IsCoinBase() const                 //判断是否是创币交易
+    {
+        return (vin.size() == 1 && vin[0].prevout.IsNull());
+    }
+
+    friend bool operator==(const CTransaction& a, const CTransaction& b)
+    {
+        return a.hash == b.hash;
+    }
+
+    friend bool operator!=(const CTransaction& a, const CTransaction& b)
+    {
+        return a.hash != b.hash;
+    }
+
+    std::string ToString() const;
+
+    bool HasWitness() const
+    {
+        for (size_t i = 0; i < vin.size(); i++) {
+            if (!vin[i].scriptWitness.IsNull()) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+```
  
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2MDc5MzI4MzgsOTYyMTE1MjE4LC0xOT
+eyJoaXN0b3J5IjpbLTE5NjU1MTgyNDEsOTYyMTE1MjE4LC0xOT
 A0MzI2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1
 MDk5LC03MzUzODk1NzFdfQ==
 -->
