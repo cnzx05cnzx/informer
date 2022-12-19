@@ -248,7 +248,7 @@ public:
 
 ###  CTxOut
  负责交易的输出，该类中定义了输出金额和锁定脚本
-###  CTransaction
+###  CTransaction（部分）
 该模块实现基本的交易，就是那些在网络中广播并被最终打包到区块中的数据结构。
  其中，一个交易可以包含多个交易输入和输出
  
@@ -326,18 +326,6 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull());
     }
 
-    friend bool operator==(const CTransaction& a, const CTransaction& b)
-    {
-        return a.hash == b.hash;
-    }
-
-    friend bool operator!=(const CTransaction& a, const CTransaction& b)
-    {
-        return a.hash != b.hash;
-    }
-
-    std::string ToString() const;
-
     bool HasWitness() const
     {
         for (size_t i = 0; i < vin.size(); i++) {
@@ -349,9 +337,12 @@ public:
     }
 };
 ```
- 
+
+###  CMutableTransaction
+该模块实现基本的交易，就是那些在网络中广播并被最终打包到区块中的数据结构。
+ 其中，一个交易可以包含多个交易输入和输出可变交易类，内容和CTransaction差不多。只是交易可以直接修改，广播中传播和打包到区块的交易都是CTransaction类型。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTU2MDQzMTE1OCw5NjIxMTUyMTgsLTE5MD
+eyJoaXN0b3J5IjpbMTkwMDE5NzgyMCw5NjIxMTUyMTgsLTE5MD
 QzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUw
 OTksLTczNTM4OTU3MV19
 -->
