@@ -21,12 +21,16 @@
  2. **compact**， 兼容
  3. **config**， 配置
  4. **consensus**， 共识算法
- 5. **crypto**， 加密算法
+ 5. **crypto**， 加密解密
  6. **interfaces**， j事件，节点，钱包类
  7. **leveldb**，水平数据库
  8. **obj object**，cpp编译中间目录 
  9. **policy**， 策略
- 10. **primitivee**， qu'kuai'l共识-法官判断 
+ 10. **primitivee**， 区块类，交易类
+ 11. **qt**， 图形界面类
+ 12. **rpc**， 通信
+ 13. **script**， 脚本
+ 14. **secp256k1**， 共识-法官判断 
 
 ## 切换到另一个文件
 
@@ -162,6 +166,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTk1NjcyNzg0MSw3Mjc2NjE5NjYsMTQxNz
+eyJoaXN0b3J5IjpbMjAzNzAxMTgzMSw3Mjc2NjE5NjYsMTQxNz
 YzNTA5OSwtNzM1Mzg5NTcxXX0=
 -->
