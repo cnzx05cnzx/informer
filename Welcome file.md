@@ -14,7 +14,10 @@
 
 # 项目结构
 
-使用导航栏左边的文件夹图标可以访问文件资源管理器。您可以通过单击文件资源管理器中的 **创建文件** 图标来创建新文件。您还可以通过单击 **创建文件夹** 图标来创建文件夹。
+首先根据Bitcoin的项目目录进行分析。
+分成19个部分。
+
+ 1. 这里是列表文本
 
 ## 切换到另一个文件
 
@@ -150,6 +153,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjYyNzI1MzMzLDcyNzY2MTk2NiwxNDE3Nj
-M1MDk5LC03MzUzODk1NzFdfQ==
+eyJoaXN0b3J5IjpbMjAxNDg2Mjc2MCw3Mjc2NjE5NjYsMTQxNz
+YzNTA5OSwtNzM1Mzg5NTcxXX0=
 -->
