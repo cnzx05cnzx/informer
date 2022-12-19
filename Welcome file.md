@@ -144,9 +144,104 @@ public:
 ## Transaction
 交易是比特币中的重要内容。源码在 bitcoin/src/private 中。
 
-### ### COutPut
+###  COutPut
+
+```c++ 
+/*
+一个交易哈希值与输出下标的集合
+*/
+class COutPoint
+{
+public:
+    uint256 hash;       //交易哈希
+    uint32_t n;         //对应序列号
+
+    COutPoint(): n((uint32_t) -1) { }       
+    COutPoint(const uint256& hashIn, uint32_t nIn): hash(hashIn), n(nIn) { }
+
+    ADD_SERIALIZE_METHODS;      //用来序列化数据结构，方便存储和传输
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(hash);
+        READWRITE(n);
+    }
+
+    void SetNull() { hash.SetNull(); n = (uint32_t) -1; }
+    bool IsNull() const { return (hash.IsNull() && n == (uint32_t) -1); }
+
+    //<重载函数
+    friend bool operator<(const COutPoint& a, const COutPoint& b)
+    {
+        int cmp = a.hash.Compare(b.hash);
+        return cmp < 0 || (cmp == 0 && a.n < b.n);
+    }
+
+    //==重载函数
+    friend bool operator==(const COutPoint& a, const COutPoint& b)
+    {
+        return (a.hash == b.hash && a.n == b.n);
+    }
+
+    //!=重载函数
+    friend bool operator!=(const COutPoint& a, const COutPoint& b)
+    {
+        return !(a == b);
+    }
+
+    std::string ToString() const;
+};
+```
+###  COutPut
+
+```c++ 
+/*
+一个交易哈希值与输出下标的集合
+*/
+class COutPoint
+{
+public:
+    uint256 hash;       //交易哈希
+    uint32_t n;         //对应序列号
+
+    COutPoint(): n((uint32_t) -1) { }       
+    COutPoint(const uint256& hashIn, uint32_t nIn): hash(hashIn), n(nIn) { }
+
+    ADD_SERIALIZE_METHODS;      //用来序列化数据结构，方便存储和传输
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(hash);
+        READWRITE(n);
+    }
+
+    void SetNull() { hash.SetNull(); n = (uint32_t) -1; }
+    bool IsNull() const { return (hash.IsNull() && n == (uint32_t) -1); }
+
+    //<重载函数
+    friend bool operator<(const COutPoint& a, const COutPoint& b)
+    {
+        int cmp = a.hash.Compare(b.hash);
+        return cmp < 0 || (cmp == 0 && a.n < b.n);
+    }
+
+    //==重载函数
+    friend bool operator==(const COutPoint& a, const COutPoint& b)
+    {
+        return (a.hash == b.hash && a.n == b.n);
+    }
+
+    //!=重载函数
+    friend bool operator!=(const COutPoint& a, const COutPoint& b)
+    {
+        return !(a == b);
+    }
+
+    std::string ToString() const;
+};
+```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTk3NTAzNjQxMCw5NjIxMTUyMTgsLTE5MD
+eyJoaXN0b3J5IjpbMTczMTEwOTczMCw5NjIxMTUyMTgsLTE5MD
 QzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUw
 OTksLTczNTM4OTU3MV19
 -->
