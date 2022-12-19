@@ -545,16 +545,9 @@ public:
     void check(const CCoinsViewCache *pcoins) const;
     void setSanityCheck(double dFrequency = 1.0) { nCheckFrequency = static_cast<uint32_t>(dFrequency * 4294967295.0); }
 
-    // addUnchecked must updated state for all ancestors of a given transaction,
-    // to track size/count of descendant transactions.  First version of
-    // addUnchecked can be used to have it call CalculateMemPoolAncestors(), and
-    // then invoke the second version.
-    // Note that addUnchecked is ONLY called from ATMP outside of tests
-    // and any other callers may break wallet's in-mempool tracking (due to
-    // lack of CValidationInterface::TransactionAddedToMempool callbacks).
-    /**
-    *  addUnchecked函数必先更新祖先交易的状态
-    *  第一个addUnchecked函数可以用来调用CalculateMemPoolAncestors
+    /*
+    addUnchecked函数必先更新祖先交易的状态
+    第一个addUnchecked函数可以用来调用CalculateMemPoolAncestors
     *  然后再调用第二个addUnchecked
     */
     bool addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry, bool validFeeEstimate = true);
@@ -565,82 +558,31 @@ public:
     void removeConflicts(const CTransaction &tx);
     void removeForBlock(const std::vector<CTransactionRef>& vtx, unsigned int nBlockHeight);
 
-    void clear();
-    void _clear(); //lock free
-    bool CompareDepthAndScore(const uint256& hasha, const uint256& hashb);
-    void queryHashes(std::vector<uint256>& vtxid);
-    bool isSpent(const COutPoint& outpoint);
-    unsigned int GetTransactionsUpdated() const;
-    void AddTransactionsUpdated(unsigned int n);
-    /**
-     * Check that none of this transactions inputs are in the mempool, and thus
-     * the tx is not dependent on other mempool transactions to be included in a block.
-     **
-     * 检查交易的输入是否在当前交易池中
-     */
-    bool HasNoInputsOf(const CTransaction& tx) const;
-
-    /** Affect CreateNewBlock prioritisation of transactions */
-    //调整CreateNewBlock时的交易优先级
-    void PrioritiseTransaction(const uint256& hash, const CAmount& nFeeDelta);
-    void ApplyDelta(const uint256 hash, CAmount &nFeeDelta) const;
-    void ClearPrioritisation(const uint256 hash);
 
 public:
-    /** Remove a set of transactions from the mempool.
-     *  If a transaction is in this set, then all in-mempool descendants must
-     *  also be in the set, unless this transaction is being removed for being
-     *  in a block.
-     *  Set updateDescendants to true when removing a tx that was in a block, so
-     *  that any in-mempool descendants have their ancestor state updated.
-     ** 
-     *  从mempool中移除一个交易集合，
-     *  如果一个交易在这个集合中，那么它的所有子孙交易都必须在集合中，
-     *  除非该交易已经被打包到区块中。
-     *  如果要移除一个已经被打包到区块中的交易，
-     *  那么要把updateDescendants设为true，
-     *  从而更新mempool中所有子孙节点的祖先信息
+    /*
+     从mempool中移除一个交易集合，
+     如果一个交易在这个集合中，那么它的所有子孙交易都必须在集合中，
+     除非该交易已经被打包到区块中。
+     如果要移除一个已经被打包到区块中的交易，
+     那么要把updateDescendants设为true，
+     从而更新mempool中所有子孙节点的祖先信息
      */
     void RemoveStaged(setEntries &stage, bool updateDescendants, MemPoolRemovalReason reason = MemPoolRemovalReason::UNKNOWN);
 
-    /** When adding transactions from a disconnected block back to the mempool,
-     *  new mempool entries may have children in the mempool (which is generally
-     *  not the case when otherwise adding transactions).
-     *  UpdateTransactionsFromBlock() will find child transactions and update the
-     *  descendant state for each transaction in vHashesToUpdate (excluding any
-     *  child transactions present in vHashesToUpdate, which are already accounted
-     *  for).  Note: vHashesToUpdate should be the set of transactions from the
-     *  disconnected block that have been accepted back into the mempool.
-     **
-     *  更新每一个交易的所有子孙交易状态
-     *
-     */
     void UpdateTransactionsFromBlock(const std::vector<uint256> &vHashesToUpdate);
-
-    /** Try to calculate all in-mempool ancestors of entry.
-     *  (these are all calculated including the tx itself)
-     *  limitAncestorCount = max number of ancestors
-     *  limitAncestorSize = max size of ancestors
-     *  limitDescendantCount = max number of descendants any ancestor can have
-     *  limitDescendantSize = max size of descendants any ancestor can have
-     *  errString = populated with error reason if any limits are hit
-     *  fSearchForParents = whether to search a tx's vin for in-mempool parents, or
-     *    look up parents from mapLinks. Must be true for entries not in the mempool
-     ** 
-     *  计算mempool中所有entry的祖先
-     *  limitAncestorCount   = 最大祖先数量
-     *  limitAncestorSize    = 最大祖先交易大小
-     *  limitDescendantCount = 任意祖先的最大子孙数量
-     *  limitDescendantSize  = 任意祖先的最大子孙大小
-     *  errString            = 超过了任何limit限制的错误提示
-     *  fSearchForParents    = 是否在mempool中搜索交易的输入，
-     *  或者从mapLinks中查找，对于不在mempool中的entry必须设为true
+	 /*
+     计算mempool中所有entry的祖先
+     limitAncestorCount   = 最大祖先数量
+     limitAncestorSize    = 最大祖先交易大小
+     limitDescendantCount = 任意祖先的最大子孙数量
+     limitDescendantSize  = 任意祖先的最大子孙大小
+     errString            = 超过了任何limit限制的错误提示
+     fSearchForParents    = 是否在mempool中搜索交易的输入，
+     或者从mapLinks中查找，对于不在mempool中的entry必须设为true
      */
     bool CalculateMemPoolAncestors(const CTxMemPoolEntry &entry, setEntries &setAncestors, uint64_t limitAncestorCount, uint64_t limitAncestorSize, uint64_t limitDescendantCount, uint64_t limitDescendantSize, std::string &errString, bool fSearchForParents = true) const;
 
-    /** Populate setDescendants with all in-mempool descendants of hash.
-     *  Assumes that setDescendants includes all in-mempool descendants of anything
-     *  already in it.  */
     //计算所有子孙交易
     void CalculateDescendants(txiter it, setEntries &setDescendants);
 
@@ -704,7 +646,7 @@ private:
 };
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTEwOTkzOTcwNSwtMTQ0NTU4MjE3NCwtMT
+eyJoaXN0b3J5IjpbLTMxNzk2MjM0MiwtMTQ0NTU4MjE3NCwtMT
 I1MjA0MTY5MSwtOTE3MTc1NTg4LDk2MjExNTIxOCwtMTkwNDMy
 NjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OS
 wtNzM1Mzg5NTcxXX0=
