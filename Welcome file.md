@@ -351,12 +351,96 @@ public:
 ###  LockPoints
 通过设定一个"假"的高度值，用来标识它们只存在于交易池中，从而实现交易锁定点的功能。锁定交易最后的区块高度和打包时间
 
-###  LockPoints
+###  CTxMemPoolEntry
 通过设定一个"假"的高度值，用来标识它们只存在于交易池中，从而实现交易锁定点的功能。锁定交易最后的区块高度和打包时间
+
+```c++ 
+class CTxMemPool;
+//交易池基本构成元素
+class CTxMemPoolEntry
+{
+private:
+    CTransactionRef tx;         //交易引用
+    CAmount nFee;               //交易费用      //!< Cached to avoid expensive parent-transaction lookups
+    size_t nTxWeight;           //            //!< ... and avoid recomputing tx weight (also used for GetTxSize())
+    size_t nUsageSize;          //大小        //!< ... and total memory usage
+    int64_t nTime;              //交易时间戳   //!< Local time when entering the mempool
+    unsigned int entryHeight;   //区块高度  //!< Chain height when entering the mempool
+    bool spendsCoinbase;        //上个交易是否是创币交易   //!< keep track of transactions that spend a coinbase
+    int64_t sigOpCost;          //？？？  !< Total sigop cost
+    int64_t feeDelta;           //交易优先级的一个标量    //!< Used for determining the priority of the transaction for mining in a block
+    LockPoints lockPoints;      //锁定点，交易最后的区块高度和打包时间 //!< Track the height and time at which tx was final
+
+    // Information about descendants of this transaction that are in the
+    // mempool; if we remove this transaction we must remove all of these
+    // descendants as well.
+    /* 
+    **  子孙交易信息
+    *   如果我们移除一个交易，我们也必须同时移除它所有的子孙交易
+    */
+    uint64_t nCountWithDescendants;     //子孙交易数量 //!< number of descendant transactions
+    uint64_t nSizeWithDescendants;      //大小        //!< ... and size
+    CAmount nModFeesWithDescendants;    //费用总和，包括当前交易   //!< ... and total fees (all including us)
+
+    // Analogous statistics for ancestor transactions
+    //祖先交易信息
+    uint64_t nCountWithAncestors;       //祖先交易数量
+    uint64_t nSizeWithAncestors;        //大小
+    CAmount nModFeesWithAncestors;      //费用总和
+    int64_t nSigOpCostWithAncestors;    //？？？ 
+
+public:
+    CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFee,
+                    int64_t _nTime, unsigned int _entryHeight,
+                    bool spendsCoinbase,
+                    int64_t nSigOpsCost, LockPoints lp);
+
+    const CTransaction& GetTx() const { return *this->tx; }
+    CTransactionRef GetSharedTx() const { return this->tx; }
+    const CAmount& GetFee() const { return nFee; }
+    size_t GetTxSize() const;
+    size_t GetTxWeight() const { return nTxWeight; }
+    int64_t GetTime() const { return nTime; }
+    unsigned int GetHeight() const { return entryHeight; }
+    int64_t GetSigOpCost() const { return sigOpCost; }
+    int64_t GetModifiedFee() const { return nFee + feeDelta; }
+    size_t DynamicMemoryUsage() const { return nUsageSize; }
+    const LockPoints& GetLockPoints() const { return lockPoints; }
+
+    // Adjusts the descendant state.
+    // 更新子孙交易状态
+    void UpdateDescendantState(int64_t modifySize, CAmount modifyFee, int64_t modifyCount);
+    // Adjusts the ancestor state
+    // 更新祖先交易状态
+    void UpdateAncestorState(int64_t modifySize, CAmount modifyFee, int64_t modifyCount, int64_t modifySigOps);
+    // Updates the fee delta used for mining priority score, and the
+    // modified fees with descendants.
+    // 更新交易优先级
+    void UpdateFeeDelta(int64_t feeDelta);
+    // Update the LockPoints after a reorg
+    // 更新锁定点
+    void UpdateLockPoints(const LockPoints& lp);
+
+    //获取子孙交易信息
+    uint64_t GetCountWithDescendants() const { return nCountWithDescendants; }
+    uint64_t GetSizeWithDescendants() const { return nSizeWithDescendants; }
+    CAmount GetModFeesWithDescendants() const { return nModFeesWithDescendants; }
+
+    bool GetSpendsCoinbase() const { return spendsCoinbase; }
+
+    //获取祖先交易信息
+    uint64_t GetCountWithAncestors() const { return nCountWithAncestors; }
+    uint64_t GetSizeWithAncestors() const { return nSizeWithAncestors; }
+    CAmount GetModFeesWithAncestors() const { return nModFeesWithAncestors; }
+    int64_t GetSigOpCostWithAncestors() const { return nSigOpCostWithAncestors; }
+
+    mutable size_t vTxHashesIdx;    //交易池哈希的下标  //!< Index in mempool's vTxHashes
+};
+```
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExMDU3MzcyOTEsLTkxNzE3NTU4OCw5Nj
-IxMTUyMTgsLTE5MDQzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYx
-OTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV19
+eyJoaXN0b3J5IjpbLTI5Mjc3MzAxNSwtOTE3MTc1NTg4LDk2Mj
+ExNTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5
+NjYsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX0=
 -->
