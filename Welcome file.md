@@ -675,25 +675,6 @@ public:
     /** Returns false if the transaction is in the mempool and not within the chain limit specified. */
     //如果交易不满足chain limit，返回false
     bool TransactionWithinChainLimit(const uint256& txid, size_t chainLimit) const;
-
-    unsigned long size()
-    {
-        LOCK(cs);
-        return mapTx.size();
-    }
-
-    uint64_t GetTotalTxSize() const
-    {
-        LOCK(cs);
-        return totalTxSize;
-    }
-
-    bool exists(uint256 hash) const
-    {
-        LOCK(cs);
-        return (mapTx.count(hash) != 0);
-    }
-
     CTransactionRef get(const uint256& hash) const;
     TxMempoolInfo info(const uint256& hash) const;
     std::vector<TxMempoolInfo> infoAll() const;
@@ -704,67 +685,38 @@ public:
     boost::signals2::signal<void (CTransactionRef, MemPoolRemovalReason)> NotifyEntryRemoved;
 
 private:
-    /** UpdateForDescendants is used by UpdateTransactionsFromBlock to update
-     *  the descendants for a single transaction that has been added to the
-     *  mempool but may have child transactions in the mempool, eg during a
-     *  chain reorg.  setExclude is the set of descendant transactions in the
-     *  mempool that must not be accounted for (because any descendants in
-     *  setExclude were added to the mempool after the transaction being
-     *  updated and hence their state is already reflected in the parent
-     *  state).
-     *
-     *  cachedDescendants will be updated with the descendants of the transaction
-     *  being updated, so that future invocations don't need to walk the
-     *  same transaction again, if encountered in another transaction chain.
-     **
-     *  UpdateForDescendants 是被 UpdateTransactionsFromBlock 调用，
-     *  用来更新被加入pool中的单个交易的子孙节节点；
-     *  setExclude 是内存池中不用更新的子孙交易集合 (because any descendants in
-     *  setExclude were added to the mempool after the transaction being
-     *  updated and hence their state is already reflected in the parent
-     *  state).
-     *
-     *  当子孙交易被更新时，cachedDescendants也同时更新
+    /*
+     UpdateForDescendants 是被 UpdateTransactionsFromBlock 调用，
+     用来更新被加入pool中的单个交易的子孙节节点；
+     setExclude 是内存池中不用更新的子孙交易集合，当子孙交易被更新时，cachedDescendants也同时更新
      */
     void UpdateForDescendants(txiter updateIt,
             cacheMap &cachedDescendants,
             const std::set<uint256> &setExclude);
-    /** Update ancestors of hash to add/remove it as a descendant transaction. */
     //更新一个祖先交易去添加或移除 为一个子孙交易
     void UpdateAncestorsOf(bool add, txiter hash, setEntries &setAncestors);
-    /** Set ancestor state for an entry */
     //设置一个祖先交易
     void UpdateEntryForAncestors(txiter it, const setEntries &setAncestors);
-    /** For each transaction being removed, update ancestors and any direct children.
-      * If updateDescendants is true, then also update in-mempool descendants'
-      * ancestor state. */
-    /** 对于每一个要移除的交易，更新它的祖先和直接的儿子。
-      * 如果updateDescendants 设为 true, 那么还同时更新mempool中子孙的祖先状态
+    /*
+    对于每一个要移除的交易，更新它的祖先和直接的儿子。
+    如果updateDescendants 设为 true, 那么还同时更新mempool中子孙的祖先状态
     */
     void UpdateForRemoveFromMempool(const setEntries &entriesToRemove, bool updateDescendants);
-    /** Sever link between specified transaction and direct children. */
     //切断指定交易与直接子女之间的链接
     void UpdateChildrenForRemoval(txiter entry);
 
-    /** Before calling removeUnchecked for a given transaction,
-     *  UpdateForRemoveFromMempool must be called on the entire (dependent) set
-     *  of transactions being removed at the same time.  We use each
-     *  CTxMemPoolEntry's setMemPoolParents in order to walk ancestors of a
-     *  given transaction that is removed, so we can't remove intermediate
-     *  transactions in a chain before we've updated all the state for the
-     *  removal.
-     ** 
-     *  对于一个特定的交易，调用 removeUnchecked 之前，
-     *  必须为同时为要移除的交易集合调用UpdateForRemoveFromMempool。
-     *  我们使用每个CTxMemPoolEntry中的setMemPoolParents来遍历
-     *  要移除交易的祖先，这样能保证我们更新的正确性。
+    /*
+     对于一个特定的交易，调用 removeUnchecked 之前，
+     必须为同时为要移除的交易集合调用UpdateForRemoveFromMempool。
+     我们使用每个CTxMemPoolEntry中的setMemPoolParents来遍历
+     要移除交易的祖先，这样能保证我们更新的正确性。
      */
     void removeUnchecked(txiter entry, MemPoolRemovalReason reason = MemPoolRemovalReason::UNKNOWN);
 };
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2MjQzMDg5MTAsLTE0NDU1ODIxNzQsLT
-EyNTIwNDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQz
-MjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOT
-ksLTczNTM4OTU3MV19
+eyJoaXN0b3J5IjpbNDU3ODQxMDc0LC0xNDQ1NTgyMTc0LC0xMj
+UyMDQxNjkxLC05MTcxNzU1ODgsOTYyMTE1MjE4LC0xOTA0MzI2
+NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1MDk5LC
+03MzUzODk1NzFdfQ==
 -->
