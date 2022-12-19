@@ -256,25 +256,22 @@ public:
 class CTransaction
 {
 public:
-    // Default transaction version.
+    
     static const int32_t CURRENT_VERSION=2;         //默认交易版本
 
-    // Changing the default transaction version requires a two step process: first
-    // adapting relay policy by bumping MAX_STANDARD_VERSION, and then later date
-    // bumping the default CURRENT_VERSION at which point both CURRENT_VERSION and
-    // MAX_STANDARD_VERSION will be equal.
-    /** 更改默认交易版本需要两个步骤：
-    *   1.首先通过碰撞MAX_STANDARD_VERSION来调整中继策略，
-    *   2.然后在稍后的日期碰撞默认的CURRENT_VERSION
-    *   
-    *   最终MAX_STANDARD_VERSION和CURRENT_VERSION会一致
+    /* 
+    更改默认交易版本需要两个步骤：
+    1.首先通过碰撞MAX_STANDARD_VERSION来调整中继策略，
+    2.然后在稍后的日期碰撞默认的CURRENT_VERSION   
+    最终MAX_STANDARD_VERSION和CURRENT_VERSION会一致
     */
     static const int32_t MAX_STANDARD_VERSION=2;    
 
-    /** 下面这些变量都被定义为常量类型，从而避免无意识的修改了交易而没有更新缓存的hash值；
-    *   然而CTransaction不是可变的
-    *   反序列化和分配被执行的时候会绕过常量
-    *   这才是安全的，因为更新整个结构包括哈希值
+    /*
+    下面这些变量都被定义为常量类型，从而避免无意识的修改了交易而没有更新缓存的hash值；
+    然而CTransaction不是可变的
+    反序列化和分配被执行的时候会绕过常量
+    这才是安全的，因为更新整个结构包括哈希值
     */
     const std::vector<CTxIn> vin;       //交易输入
     const std::vector<CTxOut> vout;     //交易输出
@@ -354,7 +351,7 @@ public:
 ```
  
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5NjU1MTgyNDEsOTYyMTE1MjE4LC0xOT
-A0MzI2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1
-MDk5LC03MzUzODk1NzFdfQ==
+eyJoaXN0b3J5IjpbMTU2MDQzMTE1OCw5NjIxMTUyMTgsLTE5MD
+QzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUw
+OTksLTczNTM4OTU3MV19
 -->
