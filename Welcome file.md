@@ -332,16 +332,10 @@ public:
     CAmount GetModFeesWithDescendants() const { return nModFeesWithDescendants; }
 
     bool GetSpendsCoinbase() const { return spendsCoinbase; }
-
-    //获取祖先交易信息
-    uint64_t GetCountWithAncestors() const { return nCountWithAncestors; }
-    uint64_t GetSizeWithAncestors() const { return nSizeWithAncestors; }
-    CAmount GetModFeesWithAncestors() const { return nModFeesWithAncestors; }
-    int64_t GetSigOpCostWithAncestors() const { return nSigOpCostWithAncestors; }
-
-    mutable size_t vTxHashesIdx;    //交易池哈希的下标  //!< Index in mempool's vTxHashes
 };
 ```
+其中GetCountWithAncestors，GetSizeWithAncestors，GetModFeesWithAncestors，GetSigOpCostWithAncestors分别获取祖先交易信息
+
  CTxMemPoolEntry还有不同的排序方法，应对不同的需求：
 
  1. CompareTxMemPoolEntryByDescendantScore，按score/size原则对CTxMemPoolEntry排序
@@ -366,8 +360,9 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTg3Mjg0Mzc2LDE1OTg0NzczMTksLTEyOD
-QzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIwNDE2OTEsLTkxNzE3
-NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1MzEsLTE5NjY1NjcwNj
-csNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV19
+eyJoaXN0b3J5IjpbLTI5MjQyNjYwOSwxNTk4NDc3MzE5LC0xMj
+g0MzM2ODI3LC0xNDQ1NTgyMTc0LC0xMjUyMDQxNjkxLC05MTcx
+NzU1ODgsOTYyMTE1MjE4LC0xOTA0MzI2NTMxLC0xOTY2NTY3MD
+Y3LDcyNzY2MTk2NiwxNDE3NjM1MDk5LC03MzUzODk1NzFdfQ==
+
 -->
