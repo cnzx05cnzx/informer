@@ -644,35 +644,24 @@ public:
     //计算所有子孙交易
     void CalculateDescendants(txiter it, setEntries &setDescendants);
 
-    /** The minimum fee to get into the mempool, which may itself not be enough
-      *  for larger-sized transactions.
-      *  The incrementalRelayFee policy variable is used to bound the time it
-      *  takes the fee rate to go back down all the way to 0. When the feerate
-      *  would otherwise be half of this, it is set to 0 instead.
-      **
-      * 获取进入交易池需要满足的最小交易费，本身可能不够适用于大型交易
-      * incrementalRelayFee变量用来限制feerate降到0所需的时间
-      * 当交易费是它的一半时，它被设置为0
-      */
+    /*
+    获取进入交易池需要满足的最小交易费，本身可能不够适用于大型交易
+    incrementalRelayFee变量用来限制feerate降到0所需的时间
+    当交易费是它的一半时，它被设置为0
+    */
     CFeeRate GetMinFee(size_t sizelimit) const;
 
-    /** Remove transactions from the mempool until its dynamic size is <= sizelimit.
-      *  pvNoSpendsRemaining, if set, will be populated with the list of outpoints
-      *  which are not in mempool which no longer have any spends in this mempool.
-      ** 
-      *  移除所有动态大小超过sizelimit的交易，
-      *  如果传入了pvNoSpendsRemaining，那么将返回不在mempool中并且也没有
-      *  任何输出在mempool的交易列表
-      */
+    /*
+    移除所有动态大小超过sizelimit的交易，
+    如果传入了pvNoSpendsRemaining，那么将返回不在mempool中并且也没有
+    任何输出在mempool的交易列表
+    */
     void TrimToSize(size_t sizelimit, std::vector<COutPoint>* pvNoSpendsRemaining=nullptr);
 
-    /** Expire all transaction (and their dependencies) in the mempool older than time. Return the number of removed transactions. */
     /*
     ** 移除所有在time之前的交易和它的子孙交易，
     *  并返回被移除交易的数量
     int Expire(int64_t time);
-
-    /** Returns false if the transaction is in the mempool and not within the chain limit specified. */
     //如果交易不满足chain limit，返回false
     bool TransactionWithinChainLimit(const uint256& txid, size_t chainLimit) const;
     CTransactionRef get(const uint256& hash) const;
@@ -715,8 +704,8 @@ private:
 };
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDU3ODQxMDc0LC0xNDQ1NTgyMTc0LC0xMj
-UyMDQxNjkxLC05MTcxNzU1ODgsOTYyMTE1MjE4LC0xOTA0MzI2
-NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1MDk5LC
-03MzUzODk1NzFdfQ==
+eyJoaXN0b3J5IjpbMTEwOTkzOTcwNSwtMTQ0NTU4MjE3NCwtMT
+I1MjA0MTY5MSwtOTE3MTc1NTg4LDk2MjExNTIxOCwtMTkwNDMy
+NjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OS
+wtNzM1Mzg5NTcxXX0=
 -->
