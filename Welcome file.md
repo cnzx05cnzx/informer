@@ -267,16 +267,9 @@ public:
     void UpdateFeeDelta(int64_t feeDelta);
     // 更新锁定点
     void UpdateLockPoints(const LockPoints& lp);
-
-    //获取子孙交易信息
-    uint64_t GetCountWithDescendants() const { return nCountWithDescendants; }
-    uint64_t GetSizeWithDescendants() const { return nSizeWithDescendants; }
-    CAmount GetModFeesWithDescendants() const { return nModFeesWithDescendants; }
-
-    bool GetSpendsCoinbase() const { return spendsCoinbase; }
 };
 ```
-其中GetCountWithAncestors，GetSizeWithAncestors，GetModFeesWithAncestors，GetSigOpCostWithAncestors分别获取子孙交易信息
+其中GetCountWithDescendants，GetSizeWithDescendants，GetModFeesWithDescendants分别获取子孙交易信息
 
 而GetCountWithAncestors，GetSizeWithAncestors，GetModFeesWithAncestors，GetSigOpCostWithAncestors分别获取祖先交易信息
 
@@ -304,9 +297,9 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTY1MjU5MTg0MywtMjkyNDI2NjA5LDE1OT
-g0NzczMTksLTEyODQzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIw
-NDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1Mz
-EsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTcz
-NTM4OTU3MV19
+eyJoaXN0b3J5IjpbLTIwMjQ5MTY3OTIsLTI5MjQyNjYwOSwxNT
+k4NDc3MzE5LC0xMjg0MzM2ODI3LC0xNDQ1NTgyMTc0LC0xMjUy
+MDQxNjkxLC05MTcxNzU1ODgsOTYyMTE1MjE4LC0xOTA0MzI2NT
+MxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1MDk5LC03
+MzUzODk1NzFdfQ==
 -->
