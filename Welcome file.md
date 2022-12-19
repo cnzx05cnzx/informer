@@ -26,7 +26,7 @@
  7. **leveldb**，水平数据库
  8. **obj object**，cpp编译中间目录 
  9. **policy**， 策略
- 10. **primitive**， 区块类，交易类
+ 10. **primitives**， 区块类，交易类
  11. **qt**， 图形界面类
  12. **rpc**， 通信
  13. **script**， 脚本
@@ -60,7 +60,9 @@
 ## BLOCK
 
 区块是组成区块的基本单位，我们可以通过bitcoin-cli命令查看一个区块的基本信息。
-在源代码中找一下区块的定义在primitivee/block.h(或block.cpp)：
+在源代码中找一下区块的定义在primitives/block.h中:
+### CBlockHeader
+
 
 ## 同步文件
 
@@ -155,6 +157,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5MzE4MzE4ODQsLTE5NjY1NjcwNjcsNz
+eyJoaXN0b3J5IjpbLTE5MDQzMjY1MzEsLTE5NjY1NjcwNjcsNz
 I3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV19
 -->
