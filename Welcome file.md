@@ -387,7 +387,6 @@ private:
     uint64_t nCountWithAncestors;       //祖先交易数量
     uint64_t nSizeWithAncestors;        //大小
     CAmount nModFeesWithAncestors;      //费用总和
-    int64_t nSigOpCostWithAncestors;    //？？？ 
 
 public:
     CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFee,
@@ -440,7 +439,8 @@ public:
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyNTIwNDE2OTEsLTkxNzE3NTU4OCw5Nj
-IxMTUyMTgsLTE5MDQzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYx
-OTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV19
+eyJoaXN0b3J5IjpbMTYzNjA5NjY4MCwtMTI1MjA0MTY5MSwtOT
+E3MTc1NTg4LDk2MjExNTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2
+NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX
+0=
 -->
