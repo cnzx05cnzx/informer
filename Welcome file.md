@@ -12,7 +12,7 @@
     
 4.  **Bitcoin-tx** /src/bitcoind Bitcoind的交易处理模块，可以进行交易的查询和创建
 
-## 创建文件和文件夹
+# 项目结构
 
 使用导航栏左边的文件夹图标可以访问文件资源管理器。您可以通过单击文件资源管理器中的 **创建文件** 图标来创建新文件。您还可以通过单击 **创建文件夹** 图标来创建文件夹。
 
@@ -150,6 +150,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNT
-M4OTU3MV19
+eyJoaXN0b3J5IjpbNjYyNzI1MzMzLDcyNzY2MTk2NiwxNDE3Nj
+M1MDk5LC03MzUzODk1NzFdfQ==
 -->
