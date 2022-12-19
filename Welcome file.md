@@ -177,25 +177,12 @@ public:
     CTransaction(const CMutableTransaction &tx);
     CTransaction(CMutableTransaction &&tx);
 
-    template <typename Stream>
-    inline void Serialize(Stream& s) const {
-        SerializeTransaction(*this, s);
-    }
-
     /*
     提供此反序列化构造函数而不是Unserialize方法。
     反序列化是不可能的，因为它需要覆盖const字段
     */
     template <typename Stream>
     CTransaction(deserialize_type, Stream& s) : CTransaction(CMutableTransaction(deserialize, s)) {}
-
-    bool IsNull() const {
-        return vin.empty() && vout.empty();
-    }
-
-    const uint256& GetHash() const {
-        return hash;
-    }
     uint256 GetWitnessHash() const;         //计算包含交易和witness数据的散列           
 
     // Return sum of txouts.
@@ -272,17 +259,12 @@ public:
                     int64_t _nTime, unsigned int _entryHeight,
                     bool spendsCoinbase,
                     int64_t nSigOpsCost, LockPoints lp);
-    // Adjusts the descendant state.
     // 更新子孙交易状态
     void UpdateDescendantState(int64_t modifySize, CAmount modifyFee, int64_t modifyCount);
-    // Adjusts the ancestor state
     // 更新祖先交易状态
     void UpdateAncestorState(int64_t modifySize, CAmount modifyFee, int64_t modifyCount, int64_t modifySigOps);
-    // Updates the fee delta used for mining priority score, and the
-    // modified fees with descendants.
     // 更新交易优先级
     void UpdateFeeDelta(int64_t feeDelta);
-    // Update the LockPoints after a reorg
     // 更新锁定点
     void UpdateLockPoints(const LockPoints& lp);
 
@@ -294,7 +276,9 @@ public:
     bool GetSpendsCoinbase() const { return spendsCoinbase; }
 };
 ```
-其中GetCountWithAncestors，GetSizeWithAncestors，GetModFeesWithAncestors，GetSigOpCostWithAncestors分别获取祖先交易信息
+其中GetCountWithAncestors，GetSizeWithAncestors，GetModFeesWithAncestors，GetSigOpCostWithAncestors分别获取子孙交易信息
+
+而GetCountWithAncestors，GetSizeWithAncestors，GetModFeesWithAncestors，GetSigOpCostWithAncestors分别获取祖先交易信息
 
  CTxMemPoolEntry还有不同的排序方法，应对不同的需求：
 
@@ -320,9 +304,9 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTUyNDY1OTQ4LC0yOTI0MjY2MDksMTU5OD
-Q3NzMxOSwtMTI4NDMzNjgyNywtMTQ0NTU4MjE3NCwtMTI1MjA0
-MTY5MSwtOTE3MTc1NTg4LDk2MjExNTIxOCwtMTkwNDMyNjUzMS
-wtMTk2NjU2NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OSwtNzM1
-Mzg5NTcxXX0=
+eyJoaXN0b3J5IjpbLTY1MjU5MTg0MywtMjkyNDI2NjA5LDE1OT
+g0NzczMTksLTEyODQzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIw
+NDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1Mz
+EsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTcz
+NTM4OTU3MV19
 -->
