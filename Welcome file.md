@@ -342,13 +342,17 @@ public:
 可变交易类，相比上文的CTransaction，主题内容大致相同，只是交易可以直接修改。在广播中传播和打包到区块的交易都是CTransaction类型。
 
 ##  TransactionPool
-交易池作为鉴于区块和交易的数据结构，同样起着重要的作用
+交易池作为鉴于区块和交易的数据结构，同样起着重要的作用。
 
 当比特币网络把某个时刻产生的交易广播到网络时，矿工接收到交易后并不是立即打包到备选区块。而是将接收到的交易放到类似缓冲区的一个交易池里，然后会根据一定的优先顺序来选择交易打包，以此来保障自己能获得尽可能多的交易费。
 
-所以了解交易池的数据结构，对理解矿工打包交易会有很大的裨益。
+该处代码位于 bitcoin/src/txmempool.h 
+
+###  CMutableTransaction
+可变交易类，相比上文的CTransaction，主题内容大致相同，只是交易可以直接修改。在广播中传播和打包到区块的交易都是CTransaction类型。
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQyODEwMTM0NywtOTE3MTc1NTg4LDk2Mj
-ExNTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5
-NjYsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX0=
+eyJoaXN0b3J5IjpbMzExMTk3NzYzLC05MTcxNzU1ODgsOTYyMT
+E1MjE4LC0xOTA0MzI2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2
+NiwxNDE3NjM1MDk5LC03MzUzODk1NzFdfQ==
 -->
