@@ -48,8 +48,9 @@
 
 运行模块分成四部分：
  1. **bitcoind**，bitcoin客户端核心模块 
- 2. ****， 区块校验接口
- 3. **ui_interface.h cpp**，图形界面的接口
+ 2. **bitcoin-cli**，RPC客户端 
+ 3. **bitcoin-tx**，交易处理模块
+ 4. **bitcoin-qt**，qt编写的图形化界面客户端
 
 ## 切换到另一个文件
 
@@ -185,6 +186,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4MjAyODM3NSw3Mjc2NjE5NjYsMTQxNz
-YzNTA5OSwtNzM1Mzg5NTcxXX0=
+eyJoaXN0b3J5IjpbLTI1OTM0OTg0LDcyNzY2MTk2NiwxNDE3Nj
+M1MDk5LC03MzUzODk1NzFdfQ==
 -->
