@@ -352,10 +352,6 @@ public:
 通过设定一个"假"的高度值，用来标识它们只存在于交易池中，从而实现交易锁定点的功能。锁定交易最后的区块高度和打包时间
 
 ###  CTxMemPoolEntry
-通过设定一个"假"的高度值，用来标识它们只存在于交易池中，从而实现交易锁定点的功能。锁定交易最后的区块高度和打包时间
-
-
-###  CTxMemPoolEntry
 
  CTxMemPoolEntry 负责存储相应的交易，以及该交易对应的所有子孙交易
  
@@ -443,12 +439,12 @@ public:
  3. CompareTxMemPoolEntryByEntryTime，按时间CTxMemPoolEntry对排序
  4. CompareTxMemPoolEntryByAncestorFee，按min(score/size of entry's tx, score/size with all ancestors)进行排序
 
-
+### CTxMemPool
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4MTUxMTM0MywtMTI1MjA0MTY5MSwtOT
-E3MTc1NTg4LDk2MjExNTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2
-NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX
-0=
+eyJoaXN0b3J5IjpbLTE0NDU1ODIxNzQsLTEyNTIwNDE2OTEsLT
+kxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1MzEsLTE5NjY1
+NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV
+19
 -->
