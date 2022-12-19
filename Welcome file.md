@@ -238,8 +238,7 @@ private:
     uint64_t nCountWithDescendants;     //子孙交易数量 
     uint64_t nSizeWithDescendants;      //大小      
     CAmount nModFeesWithDescendants;    //费用总和，包括当前交易  
-
-    //祖先交易信息
+    
     uint64_t nCountWithAncestors;       //祖先交易数量
     uint64_t nSizeWithAncestors;        //大小
     CAmount nModFeesWithAncestors;      //费用总和
@@ -287,7 +286,7 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTEwNTgwMDU4NywtMjkyNDI2NjA5LDE1OT
+eyJoaXN0b3J5IjpbLTcxMzY3ODUxOCwtMjkyNDI2NjA5LDE1OT
 g0NzczMTksLTEyODQzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIw
 NDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1Mz
 EsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTcz
