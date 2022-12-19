@@ -249,11 +249,13 @@ public:
 ###  CTxOut
  负责交易的输出，该类中定义了输出金额和锁定脚本
 ###  CTransaction
- 负责交易的输出，该类中定义了输出金额和锁定脚本
+该模块实现基本的交易，就是那些在网络中广播并被最终打包到区块中的数据结构。
+ 其中，一个交易可以包含多个交易输入和输出
+ 
 
  
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyMzMwMTI2NTgsOTYyMTE1MjE4LC0xOT
+eyJoaXN0b3J5IjpbLTE2MDc5MzI4MzgsOTYyMTE1MjE4LC0xOT
 A0MzI2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2NiwxNDE3NjM1
 MDk5LC03MzUzODk1NzFdfQ==
 -->
