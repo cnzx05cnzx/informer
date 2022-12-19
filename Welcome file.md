@@ -62,7 +62,9 @@
 区块是组成区块的基本单位，我们可以通过bitcoin-cli命令查看一个区块的基本信息。
 在源代码中找一下区块的定义在primitives/block.h中:
 ### CBlockHeader
-
+```c++ 
+// A highlighted block var foo = 'bar'; 
+```
 
 ## 同步文件
 
@@ -157,6 +159,7 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5MDQzMjY1MzEsLTE5NjY1NjcwNjcsNz
-I3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV19
+eyJoaXN0b3J5IjpbLTE0MDkzNDkwMywtMTkwNDMyNjUzMSwtMT
+k2NjU2NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OSwtNzM1Mzg5
+NTcxXX0=
 -->
