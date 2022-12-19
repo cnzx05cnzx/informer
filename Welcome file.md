@@ -61,6 +61,7 @@
 
 区块是组成区块的基本单位，我们可以通过bitcoin-cli命令查看一个区块的基本信息。
 在源代码中找一下区块的定义在primitives/block.h中:
+
 ### CBlockHeader
 ```c++ 
 /*
@@ -121,7 +122,60 @@ public:
     }
 };
 ```
+### CBlock
 
+```c++ 
+
+class CBlock : public CBlockHeader         //继承自CBlockHeader，拥有其所有成员变量
+{
+public:
+    // network and disk
+    std::vector<CTransactionRef> vtx;      //所有交易的容器
+
+    // memory only
+    mutable bool fChecked;                 //交易是否验证
+
+    CBlock()
+    {
+        SetNull();
+    }
+
+    CBlock(const CBlockHeader &header)
+    {
+        SetNull();
+        *((CBlockHeader*)this) = header;
+    }
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(*(CBlockHeader*)this);
+        READWRITE(vtx);
+    }
+
+    void SetNull()
+    {
+        CBlockHeader::SetNull();
+        vtx.clear();
+        fChecked = false;
+    }
+
+    CBlockHeader GetBlockHeader() const
+    {
+        CBlockHeader block;
+        block.nVersion       = nVersion;
+        block.hashPrevBlock  = hashPrevBlock;
+        block.hashMerkleRoot = hashMerkleRoot;
+        block.nTime          = nTime;
+        block.nBits          = nBits;
+        block.nNonce         = nNonce;
+        return block;
+    }
+
+    std::string ToString() const;
+};
+```
 ## 同步文件
 
 一旦您的文件链接到同步位置，StackEdit中文版 将通过下载/上传任何修改来定期同步它。如有必要，将执行合并并解决冲突。
@@ -215,7 +269,7 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4NDI5OTAyNzAsLTE5MDQzMjY1MzEsLT
+eyJoaXN0b3J5IjpbLTEyNjkwMzc1OTEsLTE5MDQzMjY1MzEsLT
 E5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4
 OTU3MV19
 -->
