@@ -63,7 +63,63 @@
 在源代码中找一下区块的定义在primitives/block.h中:
 ### CBlockHeader
 ```c++ 
-// A highlighted block var foo = 'bar'; 
+/*
+网络中的节点不断收集新的交易打包到区块中，所有的交易会通过两两哈希的方式形成一个Merkle树
+打包的过程就是要完成工作量证明的要求，当节点解出了当前的随机数时，
+它就把当前的区块广播到其他所有节点，并且加到区块链上。
+区块中的第一笔交易称之为CoinBase交易，是产生的新币，奖励给区块的产生者  
+*/
+
+class CBlockHeader
+{
+public:
+    // header
+    int32_t nVersion;       //版本
+    uint256 hashPrevBlock;  //上一个区块的hash
+    uint256 hashMerkleRoot; //包含交易信息的Merkle树根
+    uint32_t nTime;         //时间戳
+    uint32_t nBits;         //工作量证明(POW)的难度
+    uint32_t nNonce;        //要找的符合POW的随机数
+
+    CBlockHeader()          //构造函数初始化成员变量
+    {
+        SetNull();          
+    }
+
+    ADD_SERIALIZE_METHODS;  //通过封装的模板实现类的序列化
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(this->nVersion);
+        READWRITE(hashPrevBlock);
+        READWRITE(hashMerkleRoot);
+        READWRITE(nTime);
+        READWRITE(nBits);
+        READWRITE(nNonce);
+    }
+
+    void SetNull()          //初始化成员变量
+    {
+        nVersion = 0;
+        hashPrevBlock.SetNull();
+        hashMerkleRoot.SetNull();
+        nTime = 0;
+        nBits = 0;
+        nNonce = 0;
+    }
+
+    bool IsNull() const
+    {
+        return (nBits == 0);     //难度为0说明区块还未创建，区块头为空
+    }
+
+    uint256 GetHash() const;     //获取哈希
+
+    int64_t GetBlockTime() const //获取区块时间
+    {
+        return (int64_t)nTime;
+    }
+};
 ```
 
 ## 同步文件
@@ -159,7 +215,7 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0MDkzNDkwMywtMTkwNDMyNjUzMSwtMT
-k2NjU2NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OSwtNzM1Mzg5
-NTcxXX0=
+eyJoaXN0b3J5IjpbLTE4NDI5OTAyNzAsLTE5MDQzMjY1MzEsLT
+E5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4
+OTU3MV19
 -->
