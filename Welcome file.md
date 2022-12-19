@@ -441,102 +441,24 @@ public:
 ### CTxMemPool（部分）
 CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到下一个有效区块中
 
+ 当交易在比特币网络上广播时会被加入到交易池。
+ 比如以下新的交易将不会被加入到交易池中：
+ *  没有满足最低交易费的交易
+ *  "双花"交易
+ *  一个非标准交易
 ```c++ 
-/**
- * CTxMemPool stores valid-according-to-the-current-best-chain transactions
- * that may be included in the next block.
- *
- * CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到下一个有效区块中
- *
- * Transactions are added when they are seen on the network (or created by the
- * local node), but not all transactions seen are added to the pool. For
- * example, the following new transactions will not be added to the mempool:
- * - a transaction which doesn't meet the minimum fee requirements.
- * - a new transaction that double-spends an input of a transaction already in
- * the pool where the new transaction does not meet the Replace-By-Fee
- * requirements as defined in BIP 125.
- * - a non-standard transaction.
- *
- **当交易在比特币网络上广播时会被加入到交易池。
- * 比如以下新的交易将不会被加入到交易池中：
- *  - 1.没有满足最低交易费的交易
- *  - 2."双花"交易
- *  - 3.一个非标准交易
- *
- * CTxMemPool::mapTx, and CTxMemPoolEntry bookkeeping:
- *
- * mapTx is a boost::multi_index that sorts the mempool on 4 criteria:
- * - transaction hash       //交易hash
- * - //交易费率(包括所有子孙交易)
- * - feerate [we use max(feerate of tx, feerate of tx with all descendants)]
- * - time in mempool        //加入交易池的时间
- *
- * Note: the term "descendant" refers to in-mempool transactions that depend on
- * this one, while "ancestor" refers to in-mempool transactions that a given
- * transaction depends on.
- *
- * In order for the feerate sort to remain correct, we must update transactions
- * in the mempool when new descendants arrive.  To facilitate this, we track
- * the set of in-mempool direct parents and direct children in mapLinks.  Within
- * each CTxMemPoolEntry, we track the size and fees of all descendants.
- *
- ** 为了保障交易费的正确性，当新交易被加入到交易池时，我们必须更新该交易的所有祖先交易和子孙交易。
- *  
- * Usually when a new transaction is added to the mempool, it has no in-mempool
- * children (because any such children would be an orphan).  So in
- * addUnchecked(), we:
- * - update a new entry's setMemPoolParents to include all in-mempool parents
- * - update the new entry's direct parents to include the new tx as a child
- * - update all ancestors of the transaction to include the new tx's size/fee
- *
- * When a transaction is removed from the mempool, we must:
- * - update all in-mempool parents to not track the tx in setMemPoolChildren
- * - update all ancestors to not include the tx's size/fees in descendant state
- * - update all in-mempool children to not include it as a parent
- *
- * These happen in UpdateForRemoveFromMempool().  (Note that when removing a
- * transaction along with its descendants, we must calculate that set of
- * transactions to be removed before doing the removal, or else the mempool can
- * be in an inconsistent state where it's impossible to walk the ancestors of
- * a transaction.)
- *
- * In the event of a reorg, the assumption that a newly added tx has no
- * in-mempool children is false.  In particular, the mempool is in an
- * inconsistent state while new transactions are being added, because there may
- * be descendant transactions of a tx coming from a disconnected block that are
- * unreachable from just looking at transactions in the mempool (the linking
- * transactions may also be in the disconnected block, waiting to be added).
- * Because of this, there's not much benefit in trying to search for in-mempool
- * children in addUnchecked().  Instead, in the special case of transactions
- * being added from a disconnected block, we require the caller to clean up the
- * state, to account for in-mempool, out-of-block descendants for all the
- * in-block transactions by calling UpdateTransactionsFromBlock().  Note that
- * until this is called, the mempool state is not consistent, and in particular
- * mapLinks may not be correct (and therefore functions like
- * CalculateMemPoolAncestors() and CalculateDescendants() that rely
- * on them to walk the mempool are not generally safe to use).
- *
- * Computational limits:
- *
- * Updating all in-mempool ancestors of a newly added transaction can be slow,
- * if no bound exists on how many in-mempool ancestors there may be.
- * CalculateMemPoolAncestors() takes configurable limits that are designed to
- * prevent these calculations from being too CPU intensive.
- *
- */
 class CTxMemPool
 {
 private:
-    uint32_t nCheckFrequency;           //2^32时间检查的次数   //!< Value n means that n times in 2^32 we check.
-    unsigned int nTransactionsUpdated;  //!< Used by getblocktemplate to trigger CreateNewBlock() invocation
+    uint32_t nCheckFrequency;           //2^32时间检查的次数 
+    unsigned int nTransactionsUpdated; 
     CBlockPolicyEstimator* minerPolicyEstimator;
 
-    uint64_t totalTxSize;      //交易池虚拟大小，不包括见证数据 //!< sum of all mempool tx's virtual sizes. Differs from serialized tx size since witness data is discounted. Defined in BIP 141.
-    uint64_t cachedInnerUsage; //map使用的动态内存大小        //!< sum of dynamic memory usage of all the map elements (NOT the maps themselves)
-
+    uint64_t totalTxSize;      //交易池虚拟大小，不包括见证数据 
+    uint64_t cachedInnerUsage; //map使用的动态内存大小       
     mutable int64_t lastRollingFeeUpdate;
     mutable bool blockSinceLastRollingFeeBump;
-    mutable double rollingMinimumFeeRate;   //进入交易池需要满足的最小费用    //!< minimum fee to get into the pool, decreases exponentially
+    mutable double rollingMinimumFeeRate;   //进入交易池需要满足的最小费用    
 
     void trackPackageRemoved(const CFeeRate& rate);
 
@@ -547,21 +469,21 @@ public:
     typedef boost::multi_index_container<
         CTxMemPoolEntry,
         boost::multi_index::indexed_by<
-            // sorted by txid   根据交易哈希排序
+            // 根据交易哈希排序
             boost::multi_index::hashed_unique<mempoolentry_txid, SaltedTxidHasher>,
-            // sorted by fee rate   交易费
+            // 交易费
             boost::multi_index::ordered_non_unique<
                 boost::multi_index::tag<descendant_score>,
                 boost::multi_index::identity<CTxMemPoolEntry>,
                 CompareTxMemPoolEntryByDescendantScore
             >,
-            // sorted by entry time 进入交易池的时间
+            // 进入交易池的时间
             boost::multi_index::ordered_non_unique<
                 boost::multi_index::tag<entry_time>,
                 boost::multi_index::identity<CTxMemPoolEntry>,
                 CompareTxMemPoolEntryByEntryTime
             >,
-            // sorted by fee rate with ancestors    祖父交易交易费
+            // 祖父交易交易费
             boost::multi_index::ordered_non_unique<
                 boost::multi_index::tag<ancestor_score>,
                 boost::multi_index::identity<CTxMemPoolEntry>,
@@ -574,7 +496,7 @@ public:
     indexed_transaction_set mapTx;
 
     typedef indexed_transaction_set::nth_index<0>::type::iterator txiter;
-    std::vector<std::pair<uint256, txiter> > vTxHashes; //见证数据的哈希   //!< All tx witness hashes/entries in mapTx, in random order
+    std::vector<std::pair<uint256, txiter> > vTxHashes; //见证数据的哈希  
 
     struct CompareIteratorByHash {
         bool operator()(const txiter &a, const txiter &b) const {
@@ -841,8 +763,8 @@ private:
 };
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTg3MTMxOTAyNCwtMTQ0NTU4MjE3NCwtMT
-I1MjA0MTY5MSwtOTE3MTc1NTg4LDk2MjExNTIxOCwtMTkwNDMy
-NjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5NjYsMTQxNzYzNTA5OS
-wtNzM1Mzg5NTcxXX0=
+eyJoaXN0b3J5IjpbLTE2MjQzMDg5MTAsLTE0NDU1ODIxNzQsLT
+EyNTIwNDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQz
+MjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOT
+ksLTczNTM4OTU3MV19
 -->
