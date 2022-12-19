@@ -339,10 +339,9 @@ public:
 ```
 
 ###  CMutableTransaction
-该模块实现基本的交易，就是那些在网络中广播并被最终打包到区块中的数据结构。
- 其中，一个交易可以包含多个交易输入和输出可变交易类，内容和CTransaction差不多。只是交易可以直接修改，广播中传播和打包到区块的交易都是CTransaction类型。
+可变交易类，相比上文的CTransaction，主题内容大致相同，只是交易可以直接修改。在广播中传播和打包到区块的交易都是CTransaction类型。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTkwMDE5NzgyMCw5NjIxMTUyMTgsLTE5MD
+eyJoaXN0b3J5IjpbLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MD
 QzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUw
 OTksLTczNTM4OTU3MV19
 -->
