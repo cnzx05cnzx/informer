@@ -62,7 +62,7 @@
 区块是组成区块的基本单位，我们可以通过bitcoin-cli命令查看一个区块的基本信息。
 在源代码中找一下区块的定义在primitives/block.h中:
 
-### CBlockHeader
+### CBlockHeader（部分）
 ```c++ 
 /*
 网络中的节点不断收集新的交易打包到区块中，所有的交易会通过两两哈希的方式形成一个Merkle树
@@ -88,16 +88,6 @@ public:
     }
 
     ADD_SERIALIZE_METHODS;  //通过封装的模板实现类的序列化
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(this->nVersion);
-        READWRITE(hashPrevBlock);
-        READWRITE(hashMerkleRoot);
-        READWRITE(nTime);
-        READWRITE(nBits);
-        READWRITE(nNonce);
-    }
 
     void SetNull()          //初始化成员变量
     {
@@ -512,12 +502,6 @@ public:
     bool addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry, bool validFeeEstimate = true);
     bool addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry, setEntries &setAncestors, bool validFeeEstimate = true);
 
-    void removeRecursive(const CTransaction &tx, MemPoolRemovalReason reason = MemPoolRemovalReason::UNKNOWN);
-    void removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMemPoolHeight, int flags);
-    void removeConflicts(const CTransaction &tx);
-    void removeForBlock(const std::vector<CTransactionRef>& vtx, unsigned int nBlockHeight);
-
-
 public:
     /*
      从mempool中移除一个交易集合，
@@ -605,8 +589,8 @@ private:
 };
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyODQzMzY4MjcsLTE0NDU1ODIxNzQsLT
-EyNTIwNDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQz
-MjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOT
-ksLTczNTM4OTU3MV19
+eyJoaXN0b3J5IjpbLTY3MDEyODcwNCwtMTI4NDMzNjgyNywtMT
+Q0NTU4MjE3NCwtMTI1MjA0MTY5MSwtOTE3MTc1NTg4LDk2MjEx
+NTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5Nj
+YsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX0=
 -->
