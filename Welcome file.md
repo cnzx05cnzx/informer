@@ -77,14 +77,11 @@ public:
     uint32_t nTime;         //时间戳
     uint32_t nBits;         //工作量证明(POW)的难度
     uint32_t nNonce;        //要找的符合POW的随机数
-
     CBlockHeader()          //构造函数初始化成员变量
     {
         SetNull();          
     }
-
     ADD_SERIALIZE_METHODS;  //通过封装的模板实现类的序列化
-
     void SetNull()          //初始化成员变量
     {
         nVersion = 0;
@@ -94,7 +91,6 @@ public:
         nBits = 0;
         nNonce = 0;
     }
-
     bool IsNull() const
     {
         return (nBits == 0);     //难度为0说明区块还未创建，区块头为空
@@ -129,6 +125,11 @@ public:
  并且还包括上一笔输出所需要的签名脚本
 
 该模块为了实现所需的功能，定义了四个规则（已在代码中注释）
+
+ 1. 如果一笔交易中所有的SEQUENCE_FINAL都被赋值了相应的nSequence，那么nLockTime就会被禁用
+ 2. 如果设置了该值，nSequence不被用于相对时间锁定。规则1失效
+ 3. 如果规则1有效并且设置了此变量，那么相对锁定时间单位为512秒，否则锁定时间就为1个区块
+ 4. 如果nSequence用于相对时间锁，即规则1有效，那么这个变量就用来从nSequence计算对应的锁定时间
 
 ```c++ 
 class CTxIn
@@ -360,9 +361,9 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI5MjQyNjYwOSwxNTk4NDc3MzE5LC0xMj
-g0MzM2ODI3LC0xNDQ1NTgyMTc0LC0xMjUyMDQxNjkxLC05MTcx
-NzU1ODgsOTYyMTE1MjE4LC0xOTA0MzI2NTMxLC0xOTY2NTY3MD
-Y3LDcyNzY2MTk2NiwxNDE3NjM1MDk5LC03MzUzODk1NzFdfQ==
-
+eyJoaXN0b3J5IjpbMTg2NTMzNDA0NiwtMjkyNDI2NjA5LDE1OT
+g0NzczMTksLTEyODQzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIw
+NDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1Mz
+EsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTcz
+NTM4OTU3MV19
 -->
