@@ -348,11 +348,15 @@ public:
 
 该处代码位于 bitcoin/src/txmempool.h 
 
-###  CMutableTransaction
-可变交易类，相比上文的CTransaction，主题内容大致相同，只是交易可以直接修改。在广播中传播和打包到区块的交易都是CTransaction类型。
+###  LockPoints
+通过设定一个"假"的高度值，用来标识它们只存在于交易池中，从而实现交易锁定点的功能。锁定交易最后的区块高度和打包时间
+
+###  LockPoints
+通过设定一个"假"的高度值，用来标识它们只存在于交易池中，从而实现交易锁定点的功能。锁定交易最后的区块高度和打包时间
+
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzExMTk3NzYzLC05MTcxNzU1ODgsOTYyMT
-E1MjE4LC0xOTA0MzI2NTMxLC0xOTY2NTY3MDY3LDcyNzY2MTk2
-NiwxNDE3NjM1MDk5LC03MzUzODk1NzFdfQ==
+eyJoaXN0b3J5IjpbLTExMDU3MzcyOTEsLTkxNzE3NTU4OCw5Nj
+IxMTUyMTgsLTE5MDQzMjY1MzEsLTE5NjY1NjcwNjcsNzI3NjYx
+OTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV19
 -->
