@@ -122,7 +122,7 @@ public:
     }
 };
 ```
-### CBlock
+### CBlock（部分）
 
 ```c++ 
 
@@ -134,53 +134,11 @@ public:
 
     // memory only
     mutable bool fChecked;                 //交易是否验证
-
-    CBlock()
-    {
-        SetNull();
-    }
-
-    CBlock(const CBlockHeader &header)
-    {
-        SetNull();
-        *((CBlockHeader*)this) = header;
-    }
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(*(CBlockHeader*)this);
-        READWRITE(vtx);
-    }
-
-    void SetNull()
-    {
-        CBlockHeader::SetNull();
-        vtx.clear();
-        fChecked = false;
-    }
-
-    CBlockHeader GetBlockHeader() const
-    {
-        CBlockHeader block;
-        block.nVersion       = nVersion;
-        block.hashPrevBlock  = hashPrevBlock;
-        block.hashMerkleRoot = hashMerkleRoot;
-        block.nTime          = nTime;
-        block.nBits          = nBits;
-        block.nNonce         = nNonce;
-        return block;
-    }
-
-    std::string ToString() const;
 };
 ```
 
 ### CBlockLocator
-用于描述区块链中在其他节点的一个位置，
- 如果其他节点没有相同的分支，它可以找到一个最近的中继(最近的相同块)。
- 更进一步地讲，它可能是分叉前的一个位置
+用于描述区块链中在其他节点的一个位置， 如果其他节点没有相同的分支，它可以找到一个最近的中继(最近的相同块)。 更进一步地讲，它可能是分叉前的一个位置
 
 ## 同步文件
 
@@ -275,7 +233,7 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwNzk1MTkyMzksLTE5MDQzMjY1MzEsLT
+eyJoaXN0b3J5IjpbLTE5MzcxOTU5MTgsLTE5MDQzMjY1MzEsLT
 E5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4
 OTU3MV19
 -->
