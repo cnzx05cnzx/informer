@@ -354,6 +354,12 @@ public:
 ###  CTxMemPoolEntry
 通过设定一个"假"的高度值，用来标识它们只存在于交易池中，从而实现交易锁定点的功能。锁定交易最后的区块高度和打包时间
 
+
+###  CTxMemPoolEntry
+
+ CTxMemPoolEntry 负责存储相应的交易，以及该交易对应的所有子孙交易
+ 
+ 当一个新的CTxMemPoolEntry被添加到交易池，会更新新添加交易的所有子孙交易的状态(包括子孙交易数量，大小，和交易费用）和祖父交易状态
 ```c++ 
 class CTxMemPool;
 //交易池基本构成元素
@@ -361,12 +367,12 @@ class CTxMemPoolEntry
 {
 private:
     CTransactionRef tx;         //交易引用
-    CAmount nFee;               //交易费用      //!< Cached to avoid expensive parent-transaction lookups
-    size_t nTxWeight;           //            //!< ... and avoid recomputing tx weight (also used for GetTxSize())
-    size_t nUsageSize;          //大小        //!< ... and total memory usage
-    int64_t nTime;              //交易时间戳   //!< Local time when entering the mempool
-    unsigned int entryHeight;   //区块高度  //!< Chain height when entering the mempool
-    bool spendsCoinbase;        //上个交易是否是创币交易   //!< keep track of transactions that spend a coinbase
+    CAmount nFee;               //交易费用      
+    size_t nTxWeight;           //          
+    size_t nUsageSize;          //大小        
+    int64_t nTime;              //交易时间戳   
+    unsigned int entryHeight;   //区块高度 
+    bool spendsCoinbase;        //上个交易是否是创币交易   
     int64_t sigOpCost;          //？？？  !< Total sigop cost
     int64_t feeDelta;           //交易优先级的一个标量    //!< Used for determining the priority of the transaction for mining in a block
     LockPoints lockPoints;      //锁定点，交易最后的区块高度和打包时间 //!< Track the height and time at which tx was final
@@ -440,7 +446,7 @@ public:
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI5Mjc3MzAxNSwtOTE3MTc1NTg4LDk2Mj
+eyJoaXN0b3J5IjpbLTQ4Mjg0OTUyNCwtOTE3MTc1NTg4LDk2Mj
 ExNTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5
 NjYsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX0=
 -->
