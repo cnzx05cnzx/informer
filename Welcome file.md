@@ -137,49 +137,6 @@ public:
 ###  COutPut
 功能为一个交易哈希值与输出下标的集合
 
-```c++ 
-class COutPoint
-{
-public:
-    uint256 hash;       //交易哈希
-    uint32_t n;         //对应序列号
-
-    COutPoint(): n((uint32_t) -1) { }       
-    COutPoint(const uint256& hashIn, uint32_t nIn): hash(hashIn), n(nIn) { }
-
-    ADD_SERIALIZE_METHODS;      //用来序列化数据结构，方便存储和传输
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(hash);
-        READWRITE(n);
-    }
-
-    void SetNull() { hash.SetNull(); n = (uint32_t) -1; }
-    bool IsNull() const { return (hash.IsNull() && n == (uint32_t) -1); }
-
-    //<重载函数
-    friend bool operator<(const COutPoint& a, const COutPoint& b)
-    {
-        int cmp = a.hash.Compare(b.hash);
-        return cmp < 0 || (cmp == 0 && a.n < b.n);
-    }
-
-    //==重载函数
-    friend bool operator==(const COutPoint& a, const COutPoint& b)
-    {
-        return (a.hash == b.hash && a.n == b.n);
-    }
-
-    //!=重载函数
-    friend bool operator!=(const COutPoint& a, const COutPoint& b)
-    {
-        return !(a == b);
-    }
-
-    std::string ToString() const;
-};
-```
 ###  CTxIn(部分)
  负责交易的输入，包括当前输入所对应上一笔交易的输出位置，
  并且还包括上一笔输出所需要的签名脚本
@@ -223,16 +180,6 @@ public:
      所以相对时间锁定的时间转化为相当于当前值左移9位
      */
     static const int SEQUENCE_LOCKTIME_GRANULARITY = 9;
-
-    CTxIn()
-    {
-        nSequence = SEQUENCE_FINAL;
-    }
-
-    explicit CTxIn(COutPoint prevoutIn, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=SEQUENCE_FINAL);
-    CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=SEQUENCE_FINAL);
-
-    ADD_SERIALIZE_METHODS;
 };
 ```
 
@@ -432,7 +379,7 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI0OTY5MDMyMSwtMTI4NDMzNjgyNywtMT
+eyJoaXN0b3J5IjpbMTU5ODQ3NzMxOSwtMTI4NDMzNjgyNywtMT
 Q0NTU4MjE3NCwtMTI1MjA0MTY5MSwtOTE3MTc1NTg4LDk2MjEx
 NTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5Nj
 YsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX0=
