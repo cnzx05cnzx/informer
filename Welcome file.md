@@ -62,15 +62,11 @@
 区块是组成区块的基本单位，我们可以通过bitcoin-cli命令查看一个区块的基本信息。
 在源代码中找一下区块的定义在primitives/block.h中:
 
+网络中的节点不断收集新的交易打包到区块中，所有的交易会通过两两哈希的方式形成一个Merkle树，而打包的过程就是要完成工作量证明的要求，当节点解出了当前的随机数时，它就把当前的区块广播到其他所有节点，并且加到区块链上。
+
+区块中的第一笔交易称之为CoinBase交易，是产生的新币，奖励给区块的产生者  
 ### CBlockHeader（部分）
 ```c++ 
-/*
-网络中的节点不断收集新的交易打包到区块中，所有的交易会通过两两哈希的方式形成一个Merkle树
-打包的过程就是要完成工作量证明的要求，当节点解出了当前的随机数时，
-它就把当前的区块广播到其他所有节点，并且加到区块链上。
-区块中的第一笔交易称之为CoinBase交易，是产生的新币，奖励给区块的产生者  
-*/
-
 class CBlockHeader
 {
 public:
@@ -112,7 +108,9 @@ public:
     }
 };
 ```
-### CBlock（部分）
+### CBlock
+继承自CBlockHeader，拥有其所有成员，作为所有交易的容器，
+同时包含 fChecked 变量作为交易yan'zh
 
 ```c++ 
 
@@ -379,8 +377,8 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTU5ODQ3NzMxOSwtMTI4NDMzNjgyNywtMT
-Q0NTU4MjE3NCwtMTI1MjA0MTY5MSwtOTE3MTc1NTg4LDk2MjEx
-NTIxOCwtMTkwNDMyNjUzMSwtMTk2NjU2NzA2Nyw3Mjc2NjE5Nj
-YsMTQxNzYzNTA5OSwtNzM1Mzg5NTcxXX0=
+eyJoaXN0b3J5IjpbMzY1ODAwNDczLDE1OTg0NzczMTksLTEyOD
+QzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIwNDE2OTEsLTkxNzE3
+NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1MzEsLTE5NjY1NjcwNj
+csNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4OTU3MV19
 -->
