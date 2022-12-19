@@ -176,6 +176,12 @@ public:
     std::string ToString() const;
 };
 ```
+
+### CBlockLocator
+用于描述区块链中在其他节点的一个位置，
+ 如果其他节点没有相同的分支，它可以找到一个最近的中继(最近的相同块)。
+ 更进一步地讲，它可能是分叉前的一个位置
+
 ## 同步文件
 
 一旦您的文件链接到同步位置，StackEdit中文版 将通过下载/上传任何修改来定期同步它。如有必要，将执行合并并解决冲突。
@@ -269,7 +275,7 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyNjkwMzc1OTEsLTE5MDQzMjY1MzEsLT
+eyJoaXN0b3J5IjpbLTIwNzk1MTkyMzksLTE5MDQzMjY1MzEsLT
 E5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTczNTM4
 OTU3MV19
 -->
