@@ -37,6 +37,11 @@
  18. **wallet**， 钱包类
  19. **zmp**，通信信息 
 
+接口可以分成三个部分：
+ 1. **Wall**，一致性 
+ 2. **wallet**， 钱包类
+ 3. **zmp**，通信信息 
+
 ## 切换到另一个文件
 
 您的所有文件和文件夹在文件资源管理器中都显示为树。您可以通过单击树中的文件从一个文件切换到另一个文件。
@@ -171,6 +176,6 @@ B --> D{菱形}
 C --> D
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2ODk5NjMwNDAsNzI3NjYxOTY2LDE0MT
-c2MzUwOTksLTczNTM4OTU3MV19
+eyJoaXN0b3J5IjpbMTQ5MTg0NDgzNCw3Mjc2NjE5NjYsMTQxNz
+YzNTA5OSwtNzM1Mzg5NTcxXX0=
 -->
