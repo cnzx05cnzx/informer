@@ -144,6 +144,9 @@ public:
  2. 然后在稍后的日期碰撞默认的CURRENT_VERSION   
     
 最终MAX_STANDARD_VERSION和CURRENT_VERSION会一致
+
+IsCoinBase 判断是否是创币交易
+HasWitness判断交易是否有见证者
 ```c++ 
 class CTransaction
 {
@@ -175,27 +178,10 @@ public:
     CTransaction(deserialize_type, Stream& s) : CTransaction(CMutableTransaction(deserialize, s)) {}
     uint256 GetWitnessHash() const;         //计算包含交易和witness数据的散列           
 
-    // Return sum of txouts.
     CAmount GetValueOut() const;            //返回交易出书金额总和      
-    // GetValueIn() is a method on CCoinsViewCache, because
-    // inputs must be known to compute value in.
 
     unsigned int GetTotalSize() const;      // 返回交易大小
 
-    bool IsCoinBase() const                 //判断是否是创币交易
-    {
-        return (vin.size() == 1 && vin[0].prevout.IsNull());
-    }
-
-    bool HasWitness() const
-    {
-        for (size_t i = 0; i < vin.size(); i++) {
-            if (!vin[i].scriptWitness.IsNull()) {
-                return true;
-            }
-        }
-        return false;
-    }
 };
 ```
 
@@ -286,7 +272,7 @@ CTxMemPool 保存当前主链所有的交易。这些交易有可能被加入到
 
 对于一个特定的交易，调用 removeUnchecked 之前，必须为同时为要移除的交易集合调用 UpdateForRemoveFromMempool 。使用每个 CTxMemPoolEntry 中 setMemPoolParents 来遍历要移除交易的祖先，这样能保证我们更新的正确性。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTcxMzY3ODUxOCwtMjkyNDI2NjA5LDE1OT
+eyJoaXN0b3J5IjpbLTc0MTczMzEwMSwtMjkyNDI2NjA5LDE1OT
 g0NzczMTksLTEyODQzMzY4MjcsLTE0NDU1ODIxNzQsLTEyNTIw
 NDE2OTEsLTkxNzE3NTU4OCw5NjIxMTUyMTgsLTE5MDQzMjY1Mz
 EsLTE5NjY1NjcwNjcsNzI3NjYxOTY2LDE0MTc2MzUwOTksLTcz
